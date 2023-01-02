@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model expenses {
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  expense         String
+  expenseAmount   Float
+  expenseCategory String
+  expenseDate     String
+}
+
+model income {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  incomeAmount   Float
+  incomeCategory String
+  incomeDate     String
+  incomeName     String
+}
