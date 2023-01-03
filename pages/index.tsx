@@ -166,6 +166,15 @@ export default function Home() {
       <div>
         <h1 style={{ padding: '3% 5%' }}>Daily Expense Tracking</h1>
       </div>
+      <div>
+        {' '}
+        {!isLoadingExpenses &&
+          expenses !== undefined &&
+          expenses.map((expense: any, index: number) => {
+            return <ExpenseList key={index} data={expense} />;
+          })}
+      </div>
+
       <main
         style={{
           display: 'flex',
@@ -207,14 +216,7 @@ export default function Home() {
               Outgoing expenses
             </code>
           </p>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, minmax(25%, auto))',
-              width: 'var(--max-width)',
-              maxWidth: '100%',
-            }}
-          >
+          <div>
             <TextField
               style={{ margin: '1%' }}
               id='outlined-textarea'
@@ -301,14 +303,7 @@ export default function Home() {
               Incoming expenses
             </code>
           </p>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, minmax(25%, auto))',
-              width: 'var(--max-width)',
-              maxWidth: '100%',
-            }}
-          >
+          <div>
             <TextField
               style={{ margin: '1%' }}
               id='outlined-textarea'
@@ -363,15 +358,6 @@ export default function Home() {
               </Button>
             </div>
           </div>
-        </div>
-
-        <div>
-          {' '}
-          {!isLoadingExpenses &&
-            expenses !== undefined &&
-            expenses.map((expense: any, index: number) => {
-              return <ExpenseList key={index} data={expense} />;
-            })}
         </div>
       </main>
     </>

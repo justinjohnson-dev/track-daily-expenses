@@ -15,11 +15,9 @@ function ExpenseList({
 }: ExpenseProps) {
   return (
     <div>
-      <h2>{id}</h2>
-      <h2>{expense}</h2>
-      <h2>{expenseAmount}</h2>
-      <h2>{expenseCategory}</h2>
-      <h2>{expenseDate}</h2>
+      <p>
+        {expense}/{expenseAmount}/{expenseCategory}/{expenseDate}
+      </p>
     </div>
   );
 }
