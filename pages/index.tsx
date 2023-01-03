@@ -1,14 +1,8 @@
 import Head from 'next/head';
-import { Inter } from '@next/font/google';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import styles from '../styles/Home.module.css';
-import { useExpenses, useCreateExpense } from './hooks/use-expenses';
 import ExpenseList from '../components/expenseTable';
 import { useState } from 'react';
-import { useCreateIncome } from './hooks/use-income';
-
-const inter = Inter({ subsets: ['latin'] });
 
 interface ExpenseState {
   expense: string;
@@ -20,6 +14,72 @@ interface IncomeState {
   incomeName: string;
   incomeAmount: string;
   incomeCategory: string;
+}
+
+import { useMutation, useQuery } from 'react-query';
+
+import queryClient from '../lib/query-client';
+
+function useExpenses() {
+  return useQuery('expenses', () =>
+    fetch('/api/expenses').then((res) => res.json()),
+  );
+}
+
+// function useIncome() {
+//   return useQuery('expenses', () =>
+//     fetch('/api/income').then((res) => res.json()),
+//   );
+// }
+
+interface incomeEntry {
+  incomeName: string;
+  incomeAmount: number;
+  incomeCategory: string;
+  incomeDate: string;
+}
+
+function useCreateIncome() {
+  return useMutation(
+    (income: incomeEntry) =>
+      fetch('/api/income', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(income),
+      }).then((res) => res.json()),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('income');
+      },
+    },
+  );
+}
+
+interface expenseEntry {
+  expense: string;
+  expenseAmount: number;
+  expenseCategory: string;
+  expenseDate: string;
+}
+
+function useCreateExpense() {
+  return useMutation(
+    (expense: expenseEntry) =>
+      fetch('/api/expenses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(expense),
+      }).then((res) => res.json()),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('expenses');
+      },
+    },
+  );
 }
 
 export default function Home() {
@@ -57,7 +117,7 @@ export default function Home() {
 
   const onSubmitExpense = async () => {
     try {
-      await expenseMutation.mutateAsync({
+      const expense = {
         expense: expenseForm.expense,
         expenseAmount: Number(expenseForm.expenseAmount),
         expenseCategory: expenseForm.expenseCategory,
@@ -66,7 +126,9 @@ export default function Home() {
           dateStyle: 'full',
           timeStyle: 'full',
         }),
-      });
+      };
+
+      await expenseMutation.mutateAsync(expense);
       clearExpenseForm();
     } catch (error) {
       console.log(error);
@@ -75,7 +137,7 @@ export default function Home() {
 
   const onSubmitIncom = async () => {
     try {
-      await incomeMutation.mutateAsync({
+      const income = {
         incomeName: incomeForm.incomeName,
         incomeAmount: Number(incomeForm.incomeAmount),
         incomeCategory: incomeForm.incomeCategory,
@@ -84,7 +146,9 @@ export default function Home() {
           dateStyle: 'full',
           timeStyle: 'full',
         }),
-      });
+      };
+
+      await incomeMutation.mutateAsync(income);
       clearIncomeForm();
     } catch (error) {
       console.log(error);
@@ -102,12 +166,55 @@ export default function Home() {
       <div>
         <h1 style={{ padding: '3% 5%' }}>Daily Expense Tracking</h1>
       </div>
-      <main className={styles.main}>
-        <div className={styles.expenses}>
-          <p>
-            <code className={styles.code}>Outgoing expenses</code>
+      <main
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '6rem',
+          minHeight: '100vh',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'inherit',
+            alignItems: 'inherit',
+            fontSize: '0.85rem',
+            maxWidth: 'var(--max-width)',
+            width: '100%',
+            zIndex: '2',
+            fontFamily: 'var(--font-mono)',
+          }}
+        >
+          <p
+            style={{
+              margin: '0.25rem',
+              padding: '1rem',
+              backgroundColor: ' rgba(var(--callout-rgb), 0.5)',
+              border: ' 1px solid rgba(var(--callout-border-rgb), 0.3)',
+              borderRadius: 'var(--border-radius)',
+            }}
+          >
+            <code
+              style={{
+                fontWeight: '700',
+                fontFamily: 'var(--font-mono)',
+              }}
+            >
+              Outgoing expenses
+            </code>
           </p>
-          <div className={styles.grid}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, minmax(25%, auto))',
+              width: 'var(--max-width)',
+              maxWidth: '100%',
+            }}
+          >
             <TextField
               style={{ margin: '1%' }}
               id='outlined-textarea'
@@ -153,7 +260,9 @@ export default function Home() {
             <div>
               <Button
                 variant='outlined'
-                className={styles.buttonStyle}
+                style={{
+                  float: 'right',
+                }}
                 onClick={onSubmitExpense}
               >
                 Submit
@@ -161,11 +270,37 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className={styles.expenses}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'inherit',
+            alignItems: 'inherit',
+            fontSize: '0.85rem',
+            maxWidth: 'var(--max-width)',
+            width: '100%',
+            zIndex: '2',
+            fontFamily: 'var(--font-mono)',
+          }}
+        >
           <p>
-            <code className={styles.code}>Incoming expenses</code>
+            <code
+              style={{
+                fontWeight: '700',
+                fontFamily: 'var(--font-mono)',
+              }}
+            >
+              Incoming expenses
+            </code>
           </p>
-          <div className={styles.grid}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, minmax(25%, auto))',
+              width: 'var(--max-width)',
+              maxWidth: '100%',
+            }}
+          >
             <TextField
               style={{ margin: '1%' }}
               id='outlined-textarea'
@@ -211,7 +346,9 @@ export default function Home() {
             <div>
               <Button
                 variant='outlined'
-                className={styles.buttonStyle}
+                style={{
+                  float: 'right',
+                }}
                 onClick={onSubmitIncom}
               >
                 Submit
