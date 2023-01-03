@@ -283,7 +283,15 @@ export default function Home() {
             fontFamily: 'var(--font-mono)',
           }}
         >
-          <p>
+          <p
+            style={{
+              margin: '0.25rem',
+              padding: '1rem',
+              backgroundColor: ' rgba(var(--callout-rgb), 0.5)',
+              border: ' 1px solid rgba(var(--callout-border-rgb), 0.3)',
+              borderRadius: 'var(--border-radius)',
+            }}
+          >
             <code
               style={{
                 fontWeight: '700',
