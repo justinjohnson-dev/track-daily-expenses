@@ -16,7 +16,7 @@ function ExpenseList({
   return (
     <div>
       <p>
-        {expense}/{expenseAmount}/{expenseCategory}/{expenseDate}
+        {expense}/${expenseAmount}/{expenseCategory}/{expenseDate}
       </p>
     </div>
   );

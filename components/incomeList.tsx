@@ -16,7 +16,7 @@ function IncomeList({
   return (
     <div>
       <p>
-        {incomeName}/{incomeAmount}/{incomeCategory}/{incomeDate}
+        {incomeName}/${incomeAmount}/{incomeCategory}/{incomeDate}
       </p>
     </div>
   );
