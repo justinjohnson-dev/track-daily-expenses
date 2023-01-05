@@ -205,12 +205,12 @@ export default function Home() {
             return <ExpenseList key={index} data={expense} />;
           })}
       </div>
-      <hr />
       <div>
         <code>
           January Spending: ${Math.round(currentExpenseSum * 100) / 100}
         </code>
       </div>
+      <hr />
       <div>
         {' '}
         {!isLoadingIncome &&
