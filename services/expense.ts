@@ -1,12 +1,5 @@
 import prisma from '../lib/prisma-server';
 
-interface expenseDataInterface {
-  expense: string;
-  expenseAmount: number;
-  expenseCategory: string;
-  expenseDate: string;
-}
-
 export async function getAllExpenses() {
   return prisma.expenses.findMany();
 }

@@ -14,7 +14,7 @@ import { getAllExpenses, createExpense } from '../../services/expense';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const { method, body } = req;
   if (method === 'GET') {
