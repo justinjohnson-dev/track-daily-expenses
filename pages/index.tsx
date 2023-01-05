@@ -2,7 +2,7 @@ import Head from 'next/head';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import ExpenseList from '../components/expenseTable';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface ExpenseState {
   expense: string;
@@ -19,18 +19,19 @@ interface IncomeState {
 import { useMutation, useQuery } from 'react-query';
 
 import queryClient from '../lib/query-client';
+import IncomeList from '../components/incomeList';
 
 function useExpenses() {
   return useQuery('expenses', () =>
-    fetch('/api/expenses').then((res) => res.json()),
+    fetch('/api/expenses').then((res) => res.json())
   );
 }
 
-// function useIncome() {
-//   return useQuery('expenses', () =>
-//     fetch('/api/income').then((res) => res.json()),
-//   );
-// }
+function useIncome() {
+  return useQuery('income', () =>
+    fetch('/api/income').then((res) => res.json())
+  );
+}
 
 interface incomeEntry {
   incomeName: string;
@@ -53,7 +54,7 @@ function useCreateIncome() {
       onSuccess: () => {
         queryClient.invalidateQueries('income');
       },
-    },
+    }
   );
 }
 
@@ -78,12 +79,42 @@ function useCreateExpense() {
       onSuccess: () => {
         queryClient.invalidateQueries('expenses');
       },
-    },
+    }
   );
 }
 
 export default function Home() {
   const { data: expenses, isLoading: isLoadingExpenses } = useExpenses();
+  const { data: income, isLoading: isLoadingIncome } = useIncome();
+  const [currentExpenseSum, setCurrentExpenseSum] = useState<number>(0);
+  const [currentIncomeSum, setCurrentIncomeSum] = useState<number>(0);
+
+  useEffect(() => {
+    if (expenses) {
+      const sumOfExpenses = expenses.reduce(function (
+        runningSum: any,
+        expense: { expenseAmount: any }
+      ) {
+        return runningSum + expense.expenseAmount;
+      },
+      0);
+      setCurrentExpenseSum(sumOfExpenses);
+    }
+  }, [expenses, currentExpenseSum]);
+
+  useEffect(() => {
+    if (income) {
+      const sumOfIncome = income.reduce(function (
+        runningSum: any,
+        incomeEntry: { incomeAmount: any }
+      ) {
+        return runningSum + incomeEntry.incomeAmount;
+      },
+      0);
+      setCurrentIncomeSum(sumOfIncome);
+    }
+  }, [income, currentIncomeSum]);
+
   const expenseMutation = useCreateExpense();
   const incomeMutation = useCreateIncome();
 
@@ -173,6 +204,23 @@ export default function Home() {
           expenses.map((expense: any, index: number) => {
             return <ExpenseList key={index} data={expense} />;
           })}
+      </div>
+      <hr />
+      <div>
+        <code>
+          January Spending: ${Math.round(currentExpenseSum * 100) / 100}
+        </code>
+      </div>
+      <div>
+        {' '}
+        {!isLoadingIncome &&
+          income !== undefined &&
+          income.map((incomeEntry: any, index: number) => {
+            return <IncomeList key={index} data={incomeEntry} />;
+          })}
+      </div>
+      <div>
+        <code>January Income: ${currentIncomeSum}</code>
       </div>
 
       <main

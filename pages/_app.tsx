@@ -1,4 +1,3 @@
-import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import queryClient from '../lib/query-client';
 import { QueryClientProvider } from 'react-query';
