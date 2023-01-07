@@ -3,6 +3,8 @@ import Head from 'next/head';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 
+import Box from '@mui/material/Box';
+
 export default function Navbar() {
   return (
     <>
@@ -15,18 +17,13 @@ export default function Navbar() {
       <div>
         <h1 style={{ padding: '0 5%' }}>Daily Expense Tracking</h1>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+
+      <Box sx={{ margin: '10px 0' }}>
         <Link href='/' style={{ textDecoration: 'none', color: 'inherit' }}>
           <Button
             variant='outlined'
             style={{
-              margin: '1% auto',
-              marginLeft: '5%',
+              height: '50px',
             }}
             size='large'
           >
@@ -45,12 +42,13 @@ export default function Navbar() {
             style={{
               margin: '1% auto',
               marginLeft: '5%',
+              height: '50px',
             }}
           >
             Analytics
           </Button>
         </Link>
-      </div>
+      </Box>
     </>
   );
 }
