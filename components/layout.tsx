@@ -15,32 +15,41 @@ export default function Navbar() {
       <div>
         <h1 style={{ padding: '0 5%' }}>Daily Expense Tracking</h1>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <Button
-          variant='outlined'
-          style={{
-            width: '90%',
-            margin: '1% auto',
-          }}
-        >
-          <Link href='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Link href='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Button
+            variant='outlined'
+            style={{
+              margin: '1% auto',
+              marginLeft: '5%',
+            }}
+            size='large'
+          >
             Forms
-          </Link>
-        </Button>
-        <Button
-          variant='outlined'
+          </Button>
+        </Link>
+        <Link
+          href='/analytics'
           style={{
-            width: '90%',
-            margin: '1% auto',
+            textDecoration: 'none',
+            color: 'inherit',
           }}
         >
-          <Link
-            href='/analytics'
-            style={{ textDecoration: 'none', color: 'inherit' }}
+          <Button
+            variant='outlined'
+            style={{
+              margin: '1% auto',
+              marginLeft: '5%',
+            }}
           >
             Analytics
-          </Link>
-        </Button>{' '}
+          </Button>
+        </Link>
       </div>
     </>
   );
