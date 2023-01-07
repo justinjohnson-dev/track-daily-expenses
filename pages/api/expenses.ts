@@ -5,13 +5,6 @@ import { StatusCodes } from 'http-status-codes';
 
 import { getAllExpenses, createExpense } from '../../services/expense';
 
-// type Expense = {
-//   expense: string;
-//   expenseAmount: number;
-//   expenseCategory: string;
-//   expenseDate: string;
-// };
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

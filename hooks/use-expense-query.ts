@@ -1,7 +1,9 @@
 import { useQuery } from 'react-query';
 
-export default function useExpenseQuery() {
-  return useQuery('expenses', () =>
-    fetch('/api/expenses').then((res) => res.json())
+export default function useExpenseQuery(month) {
+  return useQuery(
+    ['expenses', month],
+    () => fetch(`/api/expenses/${month}`).then((res) => res.json()),
+    { enabled: !!month }
   );
 }
