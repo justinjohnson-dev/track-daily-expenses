@@ -18,7 +18,14 @@ export default function Navbar() {
         <h1 style={{ padding: '0 5%' }}>Daily Expense Tracking</h1>
       </div>
 
-      <Box sx={{ margin: '10px 0' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-evenly',
+        }}
+      >
         <Link href='/' style={{ textDecoration: 'none', color: 'inherit' }}>
           <Button
             variant='outlined'
@@ -48,7 +55,7 @@ export default function Navbar() {
             Analytics
           </Button>
         </Link>
-      </Box>
+      </div>
     </>
   );
 }
