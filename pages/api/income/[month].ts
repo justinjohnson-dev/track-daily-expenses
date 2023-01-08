@@ -3,7 +3,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { StatusCodes } from 'http-status-codes';
 
-import { getAllExpenses } from '../../../services/expense';
+import { getAllIncomeReports } from '../../../services/income';
 import formatToDatetimeAndFilterBySelectedMonth from '../../../lib/find-reports-by-date';
 
 export default async function handler(
@@ -12,13 +12,12 @@ export default async function handler(
 ) {
   const { method, query: selectedMonth } = req;
   if (method === 'GET') {
-    const expenses = await getAllExpenses();
+    const incomeReports = await getAllIncomeReports();
     const filteredReportsByDate = formatToDatetimeAndFilterBySelectedMonth(
-      expenses,
+      incomeReports,
       Number(selectedMonth.month),
-      'expense'
+      'income'
     );
-
     return res.status(StatusCodes.OK).send(filteredReportsByDate);
   }
 }
