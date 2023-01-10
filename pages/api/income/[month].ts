@@ -6,6 +6,13 @@ import { StatusCodes } from 'http-status-codes';
 import { getAllIncomeReports } from '../../../services/income';
 import formatToDatetimeAndFilterBySelectedMonth from '../../../lib/find-reports-by-date';
 
+type incomeTypes = {
+  incomeName: string;
+  incomeAmount: number;
+  incomeCategory: string;
+  incomeDate: string;
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -18,6 +25,15 @@ export default async function handler(
       Number(selectedMonth.month),
       'income'
     );
-    return res.status(StatusCodes.OK).send(filteredReportsByDate);
+
+    const sumOfIncome = filteredReportsByDate.reduce(
+      (runningSum: number, incomeEntry: incomeTypes) =>
+        runningSum + incomeEntry.incomeAmount,
+      0
+    );
+
+    return res
+      .status(StatusCodes.OK)
+      .send({ data: filteredReportsByDate, runningSum: sumOfIncome });
   }
 }
