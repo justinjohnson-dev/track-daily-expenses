@@ -17,7 +17,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 export default function Analytics() {
-  const [month, setMonth] = useState<number>(1);
+  const currentMonth = new Date().getMonth() + 1;
+  const [month, setMonth] = useState<number>(currentMonth);
   const [currentExpenseSum, setCurrentExpenseSum] = useState<number>(0);
   const [currentIncomeSum, setCurrentIncomeSum] = useState<number>(0);
   const { data: income, isLoading: isLoadingIncome } = useIncomeQuery(month);
@@ -53,6 +54,7 @@ export default function Analytics() {
       setCurrentIncomeSum(sumOfIncome);
     }
   }, [income, currentIncomeSum]);
+
   return (
     <>
       <Layout />
@@ -81,16 +83,34 @@ export default function Analytics() {
           </Select>
         </FormControl>
       </Box>
-      <div
-        style={{ display: 'flex', flexDirection: 'column', marginLeft: '5%' }}
-      >
-        <code style={{ fontWeight: 'bold', fontSize: '15px' }}>
-          {reverseMonthLookup[month]} Spending: $
-          {Math.round(currentExpenseSum * 100) / 100}
-        </code>
-        <code style={{ fontWeight: 'bold', fontSize: '15px' }}>
-          Number of transactions:
-          {expenses !== undefined && expenses.length}
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            marginLeft: '5%',
+            width: '70%',
+          }}
+        >
+          <code style={{ fontWeight: 'bold', fontSize: '15px' }}>
+            Number of transactions:
+            {expenses !== undefined && expenses.length}
+          </code>
+          <code style={{ fontWeight: 'bold', fontSize: '15px' }}>
+            {reverseMonthLookup[month]} Spending: $
+            {Math.round(currentExpenseSum * 100) / 100}
+          </code>
+        </div>
+        <code
+          style={{
+            fontWeight: 'bold',
+            fontSize: '15px',
+            width: '20%',
+          }}
+        >
+          I/E: $
+          {Math.round(currentIncomeSum * 100) / 100 -
+            Math.round(currentExpenseSum * 100) / 100}
         </code>
       </div>
       <div>
