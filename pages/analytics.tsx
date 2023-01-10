@@ -1,59 +1,33 @@
 import { useEffect, useState } from 'react';
 
-import useExpenseQuery from '../hooks/use-expense-query';
-import useIncomeQuery from '../hooks/use-income-query';
-
-import IncomeList from '../components/income/incomeList';
-import ExpenseTable from '../components/expense/expenseTable';
-
-import Layout from '../components/layout';
-
-import { reverseMonthLookup } from '../lib/month-lookup';
-
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
+import ExpenseTable from '../components/expense/expenseTable';
+import IncomeTable from '../components/income/incomeTable';
+
+import useIncomeQuery from '../hooks/use-income-query';
+
 export default function Analytics() {
   const currentMonth = new Date().getMonth() + 1;
   const [month, setMonth] = useState<number>(currentMonth);
-  const [currentExpenseSum, setCurrentExpenseSum] = useState<number>(0);
-  const [currentIncomeSum, setCurrentIncomeSum] = useState<number>(0);
   const { data: income, isLoading: isLoadingIncome } = useIncomeQuery(month);
-  const { data: expenses, isLoading: isLoadingExpenses } =
-    useExpenseQuery(month);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMonth(parseInt(event.target.value, 10));
   };
 
-  useEffect(() => {
-    if (expenses) {
-      const sumOfExpenses = expenses.reduce(function (
-        runningSum: any,
-        expense: { expenseAmount: any }
-      ) {
-        return runningSum + expense.expenseAmount;
-      },
-      0);
-      setCurrentExpenseSum(sumOfExpenses);
-    }
-  }, [expenses, currentExpenseSum]);
+  const expenseTableProps = {
+    month: month,
+    currentIncomeSum: isLoadingIncome ? 0 : income.runningSum,
+  };
 
-  useEffect(() => {
-    if (income) {
-      const sumOfIncome = income.reduce(function (
-        runningSum: any,
-        incomeEntry: { incomeAmount: any }
-      ) {
-        return runningSum + incomeEntry.incomeAmount;
-      },
-      0);
-      setCurrentIncomeSum(sumOfIncome);
-    }
-  }, [income, currentIncomeSum]);
+  const incomeTableProps = {
+    month: month,
+  };
 
   return (
     <>
@@ -82,113 +56,9 @@ export default function Analytics() {
           </Select>
         </FormControl>
       </Box>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            marginLeft: '5%',
-            width: '70%',
-          }}
-        >
-          <code style={{ fontWeight: 'bold', fontSize: '15px' }}>
-            Number of transactions:
-            {expenses !== undefined && expenses.length}
-          </code>
-          <code style={{ fontWeight: 'bold', fontSize: '15px' }}>
-            {reverseMonthLookup[month]} Spending: $
-            {Math.round(currentExpenseSum * 100) / 100}
-          </code>
-        </div>
-        <code
-          style={{
-            fontWeight: 'bold',
-            fontSize: '15px',
-            width: '20%',
-          }}
-        >
-          I/E: $
-          {Math.round(currentIncomeSum * 100) / 100 -
-            Math.round(currentExpenseSum * 100) / 100}
-        </code>
-      </div>
-      <div>
-        <table
-          style={{
-            borderCollapse: 'collapse',
-            margin: '25px 0',
-            fontSize: '0.9em',
-            fontFamily: 'sans-serif',
-            minWidth: '400px',
-            boxShadow: '0 0 20px rgba(0, 0, 0, 0.15)',
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                backgroundColor: '#009879',
-                color: '#ffffff',
-                textAlign: 'left',
-              }}
-            >
-              <th
-                style={{
-                  padding: '12px 15px',
-                }}
-              >
-                Expense
-              </th>
-              <th
-                style={{
-                  padding: '12px 15px',
-                }}
-              >
-                Amount
-              </th>
-              <th
-                style={{
-                  padding: '12px 15px',
-                }}
-              >
-                Category
-              </th>
-              <th
-                style={{
-                  padding: '12px 15px',
-                }}
-              >
-                Date
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {!isLoadingExpenses &&
-              expenses !== undefined &&
-              expenses.map((expense: any, index: number) => {
-                return <ExpenseTable key={index} data={expense} />;
-              })}
-          </tbody>
-        </table>{' '}
-      </div>
+      <ExpenseTable {...expenseTableProps} />
       <hr />
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <code style={{ fontWeight: 'bold', fontSize: '15px' }}>
-          {reverseMonthLookup[month]} Income: $
-          {Math.round(currentIncomeSum * 100) / 100}
-        </code>
-        <code style={{ fontWeight: 'bold', fontSize: '15px' }}>
-          Number of transactions:
-          {income !== undefined && income.length}
-        </code>
-      </div>
-      <div>
-        {' '}
-        {!isLoadingIncome &&
-          income !== undefined &&
-          income.map((incomeEntry: any, index: number) => {
-            return <IncomeList key={index} data={incomeEntry} />;
-          })}
-      </div>
+      <IncomeTable {...incomeTableProps} />
     </>
   );
 }
