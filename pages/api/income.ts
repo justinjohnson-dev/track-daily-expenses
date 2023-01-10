@@ -4,14 +4,6 @@ import { StatusCodes } from 'http-status-codes';
 
 import { getAllIncomeReports, createIncomeReport } from '../../services/income';
 
-// type Data = {
-//   _id: String;
-//   incomeName: string;
-//   incomeAmount: number;
-//   incomeCategory: string;
-//   incomeDate: string;
-// };
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
