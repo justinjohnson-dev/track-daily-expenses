@@ -81,7 +81,9 @@ export default function Analytics() {
           </Select>
         </FormControl>
       </Box>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div
+        style={{ display: 'flex', flexDirection: 'column', marginLeft: '5%' }}
+      >
         <code style={{ fontWeight: 'bold', fontSize: '15px' }}>
           {reverseMonthLookup[month]} Spending: $
           {Math.round(currentExpenseSum * 100) / 100}
@@ -110,18 +112,34 @@ export default function Analytics() {
                 textAlign: 'left',
               }}
             >
-              <th style={{
-                  padding: '12px 15px'
-              }}>Expense</th>
-              <th style={{
-                  padding: '12px 15px'
-              }}>Amount</th>
-              <th style={{
-                  padding: '12px 15px'
-              }}>Category</th>
-              <th style={{
-                  padding: '12px 15px'
-              }}>Date</th>
+              <th
+                style={{
+                  padding: '12px 15px',
+                }}
+              >
+                Expense
+              </th>
+              <th
+                style={{
+                  padding: '12px 15px',
+                }}
+              >
+                Amount
+              </th>
+              <th
+                style={{
+                  padding: '12px 15px',
+                }}
+              >
+                Category
+              </th>
+              <th
+                style={{
+                  padding: '12px 15px',
+                }}
+              >
+                Date
+              </th>
             </tr>
           </thead>
           <tbody>
