@@ -3,8 +3,6 @@ import Head from 'next/head';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 
-import Box from '@mui/material/Box';
-
 export default function Navbar() {
   return (
     <>

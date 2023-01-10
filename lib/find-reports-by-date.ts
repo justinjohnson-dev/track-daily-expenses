@@ -13,7 +13,7 @@ export default function formatToDatetimeAndFilterBySelectedMonth(
   const reportDate = REPORT_TYPE[reportType];
   const reportsForCurrentMonth: string[] = [];
 
-  arrayOfReports.forEach((report, index) => {
+  arrayOfReports.forEach((report: string, index: number) => {
     const reportEntryDate = report[reportDate];
     const dateCutoffValue = reportEntryDate.indexOf(' at '); // space between at to avoid 'at' in 'Saturday'
     const stringDateToConvert = reportEntryDate.substring(
