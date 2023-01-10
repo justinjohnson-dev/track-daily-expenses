@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 
-export default function Navbar() {
+export default function Layout({ children }) {
   return (
     <>
       <Head>
@@ -54,6 +54,14 @@ export default function Navbar() {
           </Button>
         </Link>
       </div>
+      <main
+        style={{
+          alignItems: 'center',
+          minHeight: '100vh',
+        }}
+      >
+        {children}
+      </main>
     </>
   );
 }

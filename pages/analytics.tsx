@@ -57,7 +57,6 @@ export default function Analytics() {
 
   return (
     <>
-      <Layout />
       <Box sx={{ width: '90%', margin: '1rem auto' }}>
         <FormControl fullWidth>
           <InputLabel id='demo-simple-select-label'>Month</InputLabel>
