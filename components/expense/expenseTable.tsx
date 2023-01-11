@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useState, useEffect } from 'react';
 import useExpenseQuery from '../../hooks/use-expense-query';
 import { reverseMonthLookup } from '../../lib/month-lookup';
 import CircularIndeterminate from '../circularLoadingBar';
@@ -14,26 +13,12 @@ export default function ExpenseTable({
   month,
   currentIncomeSum,
 }: expenseTableProps) {
-  const [currentExpenseSum, setCurrentExpenseSum] = useState<number>(0);
   const { data: expenses, isLoading: isLoadingExpenses } =
     useExpenseQuery(month);
 
-  useEffect(() => {
-    if (expenses) {
-      const sumOfExpenses = expenses.reduce(function (
-        runningSum: any,
-        expense: { expenseAmount: any }
-      ) {
-        return runningSum + expense.expenseAmount;
-      },
-      0);
-      setCurrentExpenseSum(sumOfExpenses);
-    }
-  }, [expenses, currentExpenseSum, month]);
-
   if (isLoadingExpenses) {
     return <CircularIndeterminate />;
-  } else if (!isLoadingExpenses && expenses.length > 0) {
+  } else if (!isLoadingExpenses && expenses.data.length > 0) {
     return (
       <>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -47,11 +32,11 @@ export default function ExpenseTable({
           >
             <code style={{ fontWeight: 'bold', fontSize: '15px' }}>
               Number of transactions:
-              {expenses !== undefined && expenses.length}
+              {expenses.data !== undefined && expenses.data.length}
             </code>
             <code style={{ fontWeight: 'bold', fontSize: '15px' }}>
               {reverseMonthLookup[month]} Spending: $
-              {Math.round(currentExpenseSum * 100) / 100}
+              {Math.round(expenses.runningSum * 100) / 100}
             </code>
           </div>
           <code
@@ -63,7 +48,7 @@ export default function ExpenseTable({
           >
             I/E: $
             {Math.round(currentIncomeSum * 100) / 100 -
-              Math.round(currentExpenseSum * 100) / 100}
+              Math.round(expenses.runningSum * 100) / 100}
           </code>
         </div>
         <div>
@@ -117,8 +102,8 @@ export default function ExpenseTable({
             </thead>
             <tbody>
               {!isLoadingExpenses &&
-                expenses !== undefined &&
-                expenses.map((expense: any, index: number) => {
+                expenses.data !== undefined &&
+                expenses.data.map((expense: any, index: number) => {
                   return <ExpenseTableItems key={index} data={expense} />;
                 })}
             </tbody>

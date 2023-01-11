@@ -19,6 +19,14 @@ export default async function handler(
       'expense'
     );
 
-    return res.status(StatusCodes.OK).send(filteredReportsByDate);
+    const sumOfExpense = filteredReportsByDate.reduce(
+      (runningSum: number, expenseEntry: any) =>
+        runningSum + expenseEntry.expenseAmount,
+      0
+    );
+
+    return res
+      .status(StatusCodes.OK)
+      .send({ data: filteredReportsByDate, runningSum: sumOfExpense });
   }
 }
