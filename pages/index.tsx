@@ -5,18 +5,22 @@ import { Button } from '@mui/material';
 
 import { unstable_getServerSession } from 'next-auth/next';
 import { authOptions } from './api/auth/[...nextauth]';
+import Layout from '../components/layout';
 
 export default function Home() {
   const { data: session, status } = useSession({
     required: true,
   });
 
+  console.log(session);
+  console.log(status);
+
   if (!session) {
     return <div>not authenticated</div>;
   }
 
   return (
-    <>
+    <Layout>
       <div
         style={{
           width: '90%',
@@ -25,7 +29,6 @@ export default function Home() {
       >
         <ExpenseForm />
       </div>
-
       <div
         style={{
           width: '90%',
@@ -34,10 +37,7 @@ export default function Home() {
       >
         <IncomeForm />
       </div>
-      <Button variant='contained' onClick={(_) => signOut()}>
-        Sign Out
-      </Button>
-    </>
+    </Layout>
   );
 }
 

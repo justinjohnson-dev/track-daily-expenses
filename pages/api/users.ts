@@ -10,9 +10,12 @@ export default async function handler(
 ) {
   const { method, body } = req;
   if (method === 'POST') {
-    const userData = await getUserData('jjustin634@gmail.com');
-    console.log('user data');
-    console.log(userData);
-    return res.status(StatusCodes.OK).send(userData);
+    const userData = await getUserData(body.gmail);
+
+    if (userData.length > 0) {
+      return res.status(StatusCodes.OK).send(userData);
+    } else {
+      return res.status(StatusCodes.NOT_FOUND).send(undefined);
+    }
   }
 }

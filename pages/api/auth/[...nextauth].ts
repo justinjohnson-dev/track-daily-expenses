@@ -8,28 +8,35 @@ export const authOptions = {
       type: 'credentials',
       credentials: {},
       async authorize(credentials, req) {
-        const { gmail, password } = credentials as {
-          gmail: string;
-          password: string;
-        };
-
-        console.log(gmail, password);
-
-        // validate here your gmail and password
-        const userData = await getUserData(gmail);
-        if (userData) {
-          console.log(userData);
-          return userData as any;
+        const res = await fetch('http://localhost:3000/api/users', {
+          method: 'POST',
+          body: JSON.stringify(credentials),
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const user = await res.json();
+        if (res.ok && user) {
+          console.log(user[0]);
+          return user[0];
         } else {
-          // if (gmail !== 'justin' && password !== 'test') {
-          throw new Error('invalid credentials');
-          // }
+          return null;
         }
       },
     }),
   ],
   pages: {
     signIn: '/auth/signin',
+  },
+  callbacks: {
+    async session({ session, token }) {
+      session.user = token.user;
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
   },
 };
 

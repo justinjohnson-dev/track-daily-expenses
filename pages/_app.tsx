@@ -1,8 +1,9 @@
 import type { AppProps } from 'next/app';
-import queryClient from '../lib/query-client';
-import { QueryClientProvider } from 'react-query';
-import Layout from '../components/layout';
+
 import { SessionProvider } from 'next-auth/react';
+
+import { QueryClientProvider } from 'react-query';
+import queryClient from '../lib/query-client';
 
 export default function App({
   Component,
@@ -11,10 +12,7 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
-        <Layout>
-          {' '}
-          <Component {...pageProps} />
-        </Layout>
+        <Component {...pageProps} />
       </QueryClientProvider>
     </SessionProvider>
   );
