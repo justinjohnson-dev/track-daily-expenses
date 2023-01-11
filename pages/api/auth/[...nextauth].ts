@@ -7,7 +7,7 @@ export const authOptions = {
       type: 'credentials',
       credentials: {},
       async authorize(credentials, req) {
-        const res = await fetch('/api/users', {
+        const res = await fetch(`${process.env.AUTH_URL}/api/users`, {
           method: 'POST',
           body: JSON.stringify(credentials),
           headers: { 'Content-Type': 'application/json' },
