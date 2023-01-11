@@ -1,5 +1,6 @@
 import { Alert, Button, Grid, TextField } from '@mui/material';
 import { signIn } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
@@ -7,7 +8,7 @@ export default function Login() {
   const router = useRouter();
 
   const [authState, setAuthState] = useState({
-    gmail: '',
+    email: '',
     password: '',
   });
 
@@ -22,7 +23,7 @@ export default function Login() {
 
   const simplifyError = (error: string) => {
     const errorMap = {
-      CredentialsSignin: 'Invalid gmail or password',
+      CredentialsSignin: 'Invalid email or password',
     };
     return errorMap[error] ?? 'Unknown error occurred';
   };
@@ -68,10 +69,10 @@ export default function Login() {
         <TextField
           sx={{ mb: 1 }}
           onChange={handleFieldChange}
-          value={authState.gmail}
+          value={authState.email}
           fullWidth
-          label='gmail'
-          id='gmail'
+          label='email'
+          id='email'
         />
         <TextField
           sx={{ mb: 1 }}
@@ -94,6 +95,22 @@ export default function Login() {
         >
           Login
         </Button>
+
+        <h3>Dont have an account? Sign Up!</h3>
+        <Link
+          href='/auth/signup'
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <Button
+            variant='outlined'
+            style={{
+              height: '50px',
+            }}
+            size='large'
+          >
+            Sign up
+          </Button>
+        </Link>
       </Grid>
     </Grid>
   );

@@ -8,16 +8,16 @@ import { authOptions } from './api/auth/[...nextauth]';
 import Layout from '../components/layout';
 
 export default function Home() {
-  const { data: session, status } = useSession({
-    required: true,
-  });
+  // const { data: session, status } = useSession({
+  //   required: true,
+  // });
 
-  console.log(session);
-  console.log(status);
+  // console.log(session);
+  // console.log(status);
 
-  if (!session) {
-    return <div>not authenticated</div>;
-  }
+  // if (!session) {
+  //   return <div>not authenticated</div>;
+  // }
 
   return (
     <Layout>
@@ -41,27 +41,27 @@ export default function Home() {
   );
 }
 
-// export async function getServerSideProps(context) {
-//   const session = await unstable_getServerSession(
-//     context.req,
-//     context.res,
-//     authOptions
-//   );
+export async function getServerSideProps(context) {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
-//   console.log(session);
+  console.log(session);
 
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: '/auth/signin',
-//         permanent: false,
-//       },
-//     };
-//   }
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth/signin',
+        permanent: false,
+      },
+    };
+  }
 
-//   return {
-//     props: {
-//       session,
-//     },
-//   };
-// }
+  return {
+    props: {
+      session,
+    },
+  };
+}

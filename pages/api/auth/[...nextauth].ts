@@ -1,6 +1,5 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { getUserData } from '../../../services/user';
 
 export const authOptions = {
   providers: [
@@ -15,8 +14,7 @@ export const authOptions = {
         });
         const user = await res.json();
         if (res.ok && user) {
-          console.log(user[0]);
-          return user[0];
+          return user;
         } else {
           return null;
         }
