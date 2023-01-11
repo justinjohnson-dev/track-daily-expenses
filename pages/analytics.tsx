@@ -11,7 +11,13 @@ import IncomeTable from '../components/income/incomeTable';
 
 import useIncomeQuery from '../hooks/use-income-query';
 
+import { useSession } from 'next-auth/react';
+
 export default function Analytics() {
+  const { data: session, status } = useSession();
+
+  console.log('session', session);
+  console.log('status', status);
   const currentMonth = new Date().getMonth() + 1;
   const [month, setMonth] = useState<number>(currentMonth);
   const { data: income, isLoading: isLoadingIncome } = useIncomeQuery(month);
