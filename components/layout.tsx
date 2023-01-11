@@ -3,6 +3,8 @@ import Head from 'next/head';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
 
+import { signOut } from 'next-auth/react';
+
 export default function Layout({ children }) {
   return (
     <>
@@ -12,8 +14,25 @@ export default function Layout({ children }) {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <div>
-        <h1 style={{ padding: '0 5%' }}>Daily Expense Tracking</h1>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-evenly',
+        }}
+      >
+        <h1 style={{ padding: '0 5%' }}>Expense Tracking</h1>
+        <Button
+          variant='contained'
+          style={{
+            height: '50px',
+            margin: 'auto 0',
+            backgroundColor: '#009879',
+          }}
+          onClick={(_) => signOut()}
+        >
+          Sign Out
+        </Button>
       </div>
 
       <div
