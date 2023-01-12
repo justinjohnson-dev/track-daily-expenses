@@ -16,10 +16,10 @@ export const authOptions = {
           userData['password']
         );
 
-        if (checkPassword && userData) {
+        if (checkPassword === true && userData) {
           return userData as any;
         } else {
-          return 'No User Found' as string;
+          return null;
         }
       },
     }),

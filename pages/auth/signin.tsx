@@ -1,8 +1,9 @@
+import React, { useState } from 'react';
 import { Alert, Button, Grid, TextField } from '@mui/material';
 import { signIn } from 'next-auth/react';
-import Link from 'next/link';
+
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import Link from 'next/link';
 
 export default function Login() {
   const router = useRouter();
@@ -35,9 +36,9 @@ export default function Login() {
       redirect: false,
     })
       .then((response) => {
-        console.log(response);
         if (response.ok) {
-          // Authenticate user
+          console.log(response);
+          // Authenticate users
           router.push('/');
         } else {
           setPageState((old) => ({
@@ -59,7 +60,14 @@ export default function Login() {
 
   return (
     <Grid container alignItems='center' justifyContent='center' height='100vh'>
-      <Grid item>
+      <Grid
+        item
+        alignItems='center'
+        justifyContent='center'
+        style={{
+          width: '90%',
+        }}
+      >
         {pageState.error !== '' && (
           <Alert severity='error' sx={{ mb: 2 }}>
             {simplifyError(pageState.error)}
@@ -95,22 +103,12 @@ export default function Login() {
         >
           Login
         </Button>
-
-        <h3>Dont have an account? Sign Up!</h3>
-        <Link
-          href='/auth/signup'
-          style={{ textDecoration: 'none', color: 'inherit' }}
-        >
-          <Button
-            variant='outlined'
-            style={{
-              height: '50px',
-            }}
-            size='large'
-          >
+        <h3>
+          Dont have an account?{' '}
+          <Link href='/auth/signup' style={{ color: 'inherit' }}>
             Sign up
-          </Button>
-        </Link>
+          </Link>
+        </h3>
       </Grid>
     </Grid>
   );

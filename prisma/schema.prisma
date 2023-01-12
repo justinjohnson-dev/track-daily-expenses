@@ -13,6 +13,7 @@ model expenses {
   expenseAmount   Float
   expenseCategory String
   expenseDate     String
+  userId          String
 }
 
 model income {
@@ -21,6 +22,7 @@ model income {
   incomeCategory String
   incomeDate     String
   incomeName     String
+  userId         String
 }
 
 model users {

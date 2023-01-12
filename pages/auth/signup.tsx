@@ -1,6 +1,7 @@
 import { Alert, Button, Grid, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 import useCreateUserMutation from '../../hooks/use-signup-mutation';
 
@@ -38,7 +39,14 @@ export default function Signup() {
 
   return (
     <Grid container alignItems='center' justifyContent='center' height='100vh'>
-      <Grid item>
+      <Grid
+        item
+        alignItems='center'
+        justifyContent='center'
+        style={{
+          width: '90%',
+        }}
+      >
         <h3>Sign up</h3>
         <TextField
           sx={{ mb: 1 }}
@@ -77,6 +85,12 @@ export default function Signup() {
         >
           Sign Up
         </Button>
+        <h3>
+          Already have an account?{' '}
+          <Link href='/auth/signin' style={{ color: 'inherit' }}>
+            Sign in
+          </Link>
+        </h3>
       </Grid>
     </Grid>
   );

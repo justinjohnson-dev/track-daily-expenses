@@ -7,6 +7,7 @@ interface expenseEntry {
   expenseAmount: number;
   expenseCategory: string;
   expenseDate: string;
+  userId: string;
 }
 
 export default function useExpenseMutation() {

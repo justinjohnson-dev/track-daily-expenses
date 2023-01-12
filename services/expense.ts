@@ -9,6 +9,7 @@ export async function createExpense(daily_expense: {
   expenseAmount: number;
   expenseCategory: string;
   expenseDate: string;
+  userId: string;
 }) {
   const expenseData = {
     data: daily_expense,

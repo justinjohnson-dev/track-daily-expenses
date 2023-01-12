@@ -1,6 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react';
 
 import useExpenseMutation from '../../hooks/use-expense-mutation';
+import { useSession } from 'next-auth/react';
 
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -12,10 +14,9 @@ interface ExpenseState {
 }
 
 export default function expenseForm() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const expenseMutation = useExpenseMutation();
+  const { data: session, status } = useSession();
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const expenseMutation = useExpenseMutation();
   const [expenseForm, setExpenseForm] = useState<ExpenseState>({
     expense: '',
     expenseAmount: '',
@@ -41,6 +42,7 @@ export default function expenseForm() {
           dateStyle: 'full',
           timeStyle: 'full',
         }),
+        userId: session.user.id,
       };
 
       await expenseMutation.mutateAsync(expense);

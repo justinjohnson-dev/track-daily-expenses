@@ -5,6 +5,8 @@ import useIncomeMutation from '../../hooks/use-income-mutation';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
+import { useSession } from 'next-auth/react';
+
 interface IncomeState {
   incomeName: string;
   incomeAmount: string;
@@ -12,6 +14,8 @@ interface IncomeState {
 }
 
 export default function IncomeForm() {
+  const { data: session, status } = useSession();
+
   const incomeMutation = useIncomeMutation();
 
   const [incomeForm, setIncomeForm] = useState<IncomeState>({
@@ -39,6 +43,7 @@ export default function IncomeForm() {
           dateStyle: 'full',
           timeStyle: 'full',
         }),
+        userId: session.user.id,
       };
 
       await incomeMutation.mutateAsync(income);
