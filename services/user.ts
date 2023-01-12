@@ -10,10 +10,12 @@ export async function getUserData(email: string) {
 
 export async function createUser(user: {
   email: string;
-  username: number;
+  username: string;
   password: string;
 }) {
-  return prisma.users.create({
+  const userData = {
     data: user,
-  });
+  };
+
+  return prisma.users.create(userData);
 }
