@@ -25,7 +25,7 @@ export default function Login() {
     const errorMap = {
       CredentialsSignin: 'Invalid email or password',
     };
-    return errorMap[error] ?? 'Unknown error occurred';
+    return errorMap[error] ?? 'No User Found';
   };
 
   const handleAuth = async () => {
