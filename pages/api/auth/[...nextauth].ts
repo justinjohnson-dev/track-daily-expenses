@@ -1,22 +1,25 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
+import { getUserData } from '../../../services/user';
+import { compare } from 'bcrypt';
+
 export const authOptions = {
   providers: [
     CredentialsProvider({
       type: 'credentials',
       credentials: {},
       async authorize(credentials, req) {
-        const res = await fetch(`${process.env.AUTH_URL}/api/users`, {
-          method: 'POST',
-          body: JSON.stringify(credentials),
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const user = await res.json();
-        if (res.ok && user) {
-          return user;
+        const userData = await getUserData(credentials['email']);
+        const checkPassword = await compare(
+          credentials['password'],
+          userData['password']
+        );
+
+        if (checkPassword && userData) {
+          return userData as any;
         } else {
-          return null;
+          return 'No User Found' as string;
         }
       },
     }),
