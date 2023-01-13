@@ -5,6 +5,7 @@ import ExpenseForm from '../components/expense/expenseForm';
 import IncomeForm from '../components/income/incomeForm';
 
 import Layout from '../components/layout';
+import React from 'react';
 
 export default function Home() {
   return (

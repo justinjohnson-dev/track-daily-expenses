@@ -1,16 +1,20 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import useIncomeQuery from '../../hooks/use-income-query';
+import React from 'react';
 import { reverseMonthLookup } from '../../lib/month-lookup';
 import CircularIndeterminate from '../circularLoadingBar';
 import IncomeTableItems from './incomeTableItems';
 
 type incomeTableProps = {
+  income: any;
+  isLoadingIncome: string;
   month: number;
 };
 
-export default function IncomeTable({ month }: incomeTableProps) {
-  const { data: income, isLoading: isLoadingIncome } = useIncomeQuery(month);
-
+export default function IncomeTable({
+  income,
+  isLoadingIncome,
+  month,
+}: incomeTableProps) {
   if (isLoadingIncome) {
     return <CircularIndeterminate />;
   } else if (!isLoadingIncome && income.data.length > 0) {

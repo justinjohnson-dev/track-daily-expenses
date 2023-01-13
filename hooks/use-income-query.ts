@@ -1,9 +1,9 @@
 import { useQuery } from 'react-query';
 
-export default function useIncomeQuery(month: number) {
+export default function useIncomeQuery(userId: string, month: number) {
   return useQuery(
     ['income', month],
-    () => fetch(`/api/income/${month}`).then((res) => res.json()),
+    () => fetch(`/api/income/${userId}/${month}`).then((res) => res.json()),
     { enabled: !!month }
   );
 }

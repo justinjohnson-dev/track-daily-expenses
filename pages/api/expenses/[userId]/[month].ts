@@ -3,19 +3,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { StatusCodes } from 'http-status-codes';
 
-import { getAllExpenses } from '../../../services/expense';
-import formatToDatetimeAndFilterBySelectedMonth from '../../../lib/find-reports-by-date';
+import { getAllExpensesByUser } from '../../../../services/expense';
+import formatToDatetimeAndFilterBySelectedMonth from '../../../../lib/find-reports-by-date';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method, query: selectedMonth } = req;
+  const { method, query } = req;
   if (method === 'GET') {
-    const expenses = await getAllExpenses();
+    const expenses = await getAllExpensesByUser(query.userId);
     const filteredReportsByDate = formatToDatetimeAndFilterBySelectedMonth(
       expenses,
-      Number(selectedMonth.month),
+      Number(query.month),
       'expense'
     );
 
