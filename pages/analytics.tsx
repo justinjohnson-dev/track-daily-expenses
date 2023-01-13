@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { unstable_getServerSession } from 'next-auth/next';
+import { authOptions } from './api/auth/[...nextauth]';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -11,12 +13,17 @@ import IncomeTable from '../components/income/incomeTable';
 
 import useIncomeQuery from '../hooks/use-income-query';
 import Layout from '../components/layout';
+import React from 'react';
+import { useSession } from 'next-auth/react';
 
 export default function Analytics() {
+  const { data: session, status } = useSession();
   const currentMonth = new Date().getMonth() + 1;
   const [month, setMonth] = useState<number>(currentMonth);
-  const { data: income, isLoading: isLoadingIncome } = useIncomeQuery(month);
-
+  const { data: income, isLoading: isLoadingIncome } = useIncomeQuery(
+    status === 'authenticated' ? session.user.id : null,
+    month
+  );
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMonth(parseInt(event.target.value, 10));
   };
@@ -27,7 +34,9 @@ export default function Analytics() {
   };
 
   const incomeTableProps = {
-    month: month,
+    income,
+    isLoadingIncome,
+    month,
   };
 
   return (
@@ -62,4 +71,27 @@ export default function Analytics() {
       <IncomeTable {...incomeTableProps} />
     </Layout>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth/signin',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
 }

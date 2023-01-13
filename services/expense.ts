@@ -4,6 +4,14 @@ export async function getAllExpenses() {
   return prisma.expenses.findMany();
 }
 
+export async function getAllExpensesByUser(userId) {
+  return prisma.expenses.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+}
+
 export async function createExpense(daily_expense: {
   expense: string;
   expenseAmount: number;
