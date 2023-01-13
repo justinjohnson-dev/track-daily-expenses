@@ -53,8 +53,10 @@ export default function ExpenseTable({
             }}
           >
             I/E: $
-            {Math.round(currentIncomeSum * 100) / 100 -
-              Math.round(expenses.runningSum * 100) / 100}
+            {Math.round(
+              Math.round(currentIncomeSum * 100) / 100 -
+                Math.round(expenses.runningSum * 100) / 100
+            )}
           </code>
         </div>
         <div>
