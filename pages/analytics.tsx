@@ -69,9 +69,9 @@ export default function Analytics() {
       </Box>
       <ExpenseTable {...expenseTableProps} />
       <hr />
-      <IncomeTable {...incomeTableProps} />
-      <hr />
       <ExpenseCategories />
+      <hr />
+      <IncomeTable {...incomeTableProps} />
     </Layout>
   );
 }

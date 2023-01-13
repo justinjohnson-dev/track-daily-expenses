@@ -17,6 +17,7 @@ export default function ExpenseCategoryButton({
         color: '#ffffff',
         borderRadius: '25%',
         margin: '1%',
+        height: '30px',
       }}
     >
       {category} {categoryValue}

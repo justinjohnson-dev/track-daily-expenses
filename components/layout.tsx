@@ -1,9 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
-import Button from '@mui/material/Button';
-import Link from 'next/link';
 
-import { signOut } from 'next-auth/react';
+import ResponsiveAppBar from './appbar';
 
 export default function Layout({ children }) {
   return (
@@ -14,72 +12,13 @@ export default function Layout({ children }) {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-evenly',
-        }}
-      >
-        <h1 style={{ padding: '0 5%' }}>Expense Tracking</h1>
-        <Button
-          variant='contained'
-          style={{
-            height: '30px',
-            margin: 'auto 0',
-            backgroundColor: '#009879',
-            width: 'auto',
-          }}
-          onClick={(_) => signOut()}
-        >
-          Sign Out
-        </Button>
-      </div>
-
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-evenly',
-        }}
-      >
-        <Link href='/' style={{ textDecoration: 'none', color: 'inherit' }}>
-          <Button
-            variant='outlined'
-            style={{
-              height: '50px',
-            }}
-            size='large'
-          >
-            Forms
-          </Button>
-        </Link>
-        <Link
-          href='/analytics'
-          style={{
-            textDecoration: 'none',
-            color: 'inherit',
-          }}
-        >
-          <Button
-            variant='outlined'
-            style={{
-              margin: '1% auto',
-              marginLeft: '5%',
-              height: '50px',
-            }}
-          >
-            Analytics
-          </Button>
-        </Link>
-      </div>
       <main
         style={{
           alignItems: 'center',
           minHeight: '100vh',
         }}
       >
+        <ResponsiveAppBar />
         {children}
       </main>
       <footer
