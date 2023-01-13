@@ -42,7 +42,7 @@ export default function expenseForm() {
           dateStyle: 'full',
           timeStyle: 'full',
         }),
-        userId: session.user.id,
+        userId: session?.user?.id,
       };
 
       await expenseMutation.mutateAsync(expense);

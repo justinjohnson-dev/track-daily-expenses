@@ -7,11 +7,13 @@ import ExpenseCategoryButton from './expenseCategoryLabel';
 export default function ExpenseCategories() {
   const { data: session, status } = useSession();
   const { data: expenseCategories, isLoading: isLoadingExpenses } =
-    useExpenseCategoryQuery(status === 'authenticated' ? session.user.id : '');
+    useExpenseCategoryQuery(
+      status === 'authenticated' ? session?.user?.id : ''
+    );
 
   if (isLoadingExpenses) {
     return <CircularIndeterminate />;
-  } else if (!isLoadingExpenses && expenseCategories) {
+  } else if (!isLoadingExpenses && Object.keys(expenseCategories).length) {
     const keys = Object.keys(expenseCategories);
 
     return (

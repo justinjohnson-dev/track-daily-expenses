@@ -4,22 +4,25 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { getUserData } from '../../../services/user';
 import { compare } from 'bcrypt';
 
-export const authOptions = {
+export const authOptions: any = {
   providers: [
     CredentialsProvider({
       type: 'credentials',
       credentials: {},
-      async authorize(credentials, req) {
+      async authorize(credentials: any, req) {
         const userData = await getUserData(credentials['email']);
-        const checkPassword = await compare(
-          credentials['password'],
-          userData['password']
-        );
 
-        if (checkPassword === true && userData) {
-          return userData as any;
-        } else {
-          return null;
+        if (userData !== null) {
+          const checkPassword = await compare(
+            credentials['password'],
+            userData['password']
+          );
+
+          if (checkPassword === true && userData) {
+            return userData as any;
+          } else {
+            return null;
+          }
         }
       },
     }),

@@ -3,16 +3,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { StatusCodes } from 'http-status-codes';
 
-import { getAllExpenses } from '../../../../services/expense';
+import { getAllExpensesByUser } from '../../../../services/expense';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method, body } = req;
+  const { method, query: user } = req;
   if (method === 'GET') {
-    const expenses = await getAllExpenses();
-    const expenseCategories: {} = {};
+    const expenses = await getAllExpensesByUser(user.userId);
+    const expenseCategories: { [id: string]: number } = {};
 
     // return top 5 labels for expenses with word count
     // need to handle this in database as data grows in size
@@ -26,7 +26,7 @@ export default async function handler(
 
     const sortedCategoryDictionary = Object.fromEntries(
       Object.entries(expenseCategories)
-        .sort(([, a], [, b]) => b - a)
+        .sort(([, compA], [, compB]): number => compB - compA)
         .slice(0, 5) // top 5
     );
 

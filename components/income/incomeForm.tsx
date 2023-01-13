@@ -43,7 +43,7 @@ export default function IncomeForm() {
           dateStyle: 'full',
           timeStyle: 'full',
         }),
-        userId: session.user.id,
+        userId: session?.user?.id,
       };
 
       await incomeMutation.mutateAsync(income);
