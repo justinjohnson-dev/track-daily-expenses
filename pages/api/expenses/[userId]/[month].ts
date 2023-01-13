@@ -3,8 +3,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { StatusCodes } from 'http-status-codes';
 
-import { getAllExpensesByUser } from '../../../services/expense';
-import formatToDatetimeAndFilterBySelectedMonth from '../../../lib/find-reports-by-date';
+import { getAllExpensesByUser } from '../../../../services/expense';
+import formatToDatetimeAndFilterBySelectedMonth from '../../../../lib/find-reports-by-date';
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,8 +12,7 @@ export default async function handler(
 ) {
   const { method, query } = req;
   if (method === 'GET') {
-    const expenses = await getAllExpensesByUser('63bf09130474b38bcc8b6027');
-    console.log(expenses);
+    const expenses = await getAllExpensesByUser(query.userId);
     const filteredReportsByDate = formatToDatetimeAndFilterBySelectedMonth(
       expenses,
       Number(query.month),

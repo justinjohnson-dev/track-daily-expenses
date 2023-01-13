@@ -5,7 +5,7 @@ import { reverseMonthLookup } from '../../lib/month-lookup';
 import CircularIndeterminate from '../circularLoadingBar';
 import ExpenseTableItems from './expenseTableItems';
 
-// import { useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
 type expenseTableProps = {
   month: number;
@@ -16,9 +16,11 @@ export default function ExpenseTable({
   month,
   currentIncomeSum,
 }: expenseTableProps) {
-  // const { data: session, status } = useSession();
-  const { data: expenses, isLoading: isLoadingExpenses } =
-    useExpenseQuery(month);
+  const { data: session, status } = useSession();
+  const { data: expenses, isLoading: isLoadingExpenses } = useExpenseQuery(
+    status === 'authenticated' ? session.user.id : '',
+    month
+  );
 
   if (isLoadingExpenses) {
     return <CircularIndeterminate />;
