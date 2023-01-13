@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "pages/api/auth/[...nextauth].ts"],
-  "exclude": ["node_modules", "**/*.tsx"] // adding .tsx for nextauth id issue
+  "include": ["next-env.d.ts", "pages/api/auth/[...nextauth].ts"],
+  "exclude": ["node_modules", "**/*.tsx", "**/*.ts"] // adding .tsx for nextauth id issue // adding .ts will fix later
 }
