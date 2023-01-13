@@ -15,6 +15,7 @@ import useIncomeQuery from '../hooks/use-income-query';
 import Layout from '../components/layout';
 import React from 'react';
 import { useSession } from 'next-auth/react';
+import ExpenseCategories from '../components/expense/expenseCategories';
 
 export default function Analytics() {
   const { data: session, status } = useSession();
@@ -69,6 +70,8 @@ export default function Analytics() {
       <ExpenseTable {...expenseTableProps} />
       <hr />
       <IncomeTable {...incomeTableProps} />
+      <hr />
+      <ExpenseCategories />
     </Layout>
   );
 }

@@ -25,9 +25,10 @@ export default function Layout({ children }) {
         <Button
           variant='contained'
           style={{
-            height: '50px',
+            height: '30px',
             margin: 'auto 0',
             backgroundColor: '#009879',
+            width: 'auto',
           }}
           onClick={(_) => signOut()}
         >
@@ -81,6 +82,15 @@ export default function Layout({ children }) {
       >
         {children}
       </main>
+      <footer
+        style={{
+          backgroundColor: '#eee',
+          padding: '20px 0',
+          textAlign: 'center',
+        }}
+      >
+        <p> &copy; 2023 Expense Tracking</p>
+      </footer>
     </>
   );
 }
