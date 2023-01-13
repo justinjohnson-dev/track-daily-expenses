@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const password = 'Innovation';
+const password = 'Dinasefhas28!ousjjoJJLn2bH9!@';
 
 bcrypt
   .hash(password, saltRounds)
