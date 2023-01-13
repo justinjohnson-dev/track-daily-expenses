@@ -21,7 +21,7 @@ export default function Analytics() {
   const currentMonth = new Date().getMonth() + 1;
   const [month, setMonth] = useState<number>(currentMonth);
   const { data: income, isLoading: isLoadingIncome } = useIncomeQuery(
-    status === 'authenticated' ? session.user.id : null,
+    status === 'authenticated' ? session.user.id : '',
     month
   );
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

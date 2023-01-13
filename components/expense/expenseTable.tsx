@@ -18,7 +18,7 @@ export default function ExpenseTable({
 }: expenseTableProps) {
   const { data: session, status } = useSession();
   const { data: expenses, isLoading: isLoadingExpenses } = useExpenseQuery(
-    status === 'authenticated' ? session.user.id : null,
+    status === 'authenticated' ? session.user.id : '',
     month
   );
 
