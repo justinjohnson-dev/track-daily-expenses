@@ -6,7 +6,7 @@ import IncomeTableItems from './incomeTableItems';
 
 type incomeTableProps = {
   income: any;
-  isLoadingIncome: string;
+  isLoadingIncome: boolean;
   month: number;
 };
 

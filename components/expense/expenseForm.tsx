@@ -14,7 +14,7 @@ interface ExpenseState {
 }
 
 export default function expenseForm() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
 
   const expenseMutation = useExpenseMutation();
   const [expenseForm, setExpenseForm] = useState<ExpenseState>({

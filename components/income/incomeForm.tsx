@@ -14,7 +14,7 @@ interface IncomeState {
 }
 
 export default function IncomeForm() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
 
   const incomeMutation = useIncomeMutation();
 

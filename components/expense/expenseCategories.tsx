@@ -5,7 +5,7 @@ import CircularIndeterminate from '../circularLoadingBar';
 import ExpenseCategoryButton from './expenseCategoryLabel';
 
 export default function ExpenseCategories() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
   const { data: expenseCategories, isLoading: isLoadingExpenses } =
     useExpenseCategoryQuery(
       status === 'authenticated' ? session?.user?.id : ''

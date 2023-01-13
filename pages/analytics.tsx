@@ -18,7 +18,7 @@ import { useSession } from 'next-auth/react';
 import ExpenseCategories from '../components/expense/expenseCategories';
 
 export default function Analytics() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
   const currentMonth = new Date().getMonth() + 1;
   const [month, setMonth] = useState<number>(currentMonth);
   const { data: income, isLoading: isLoadingIncome } = useIncomeQuery(

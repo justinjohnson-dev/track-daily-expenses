@@ -16,7 +16,7 @@ export default function ExpenseTable({
   month,
   currentIncomeSum,
 }: expenseTableProps) {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
   const { data: expenses, isLoading: isLoadingExpenses } = useExpenseQuery(
     status === 'authenticated' ? session.user.id : '',
     month
