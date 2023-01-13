@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useEffect } from 'react';
+import React from 'react';
 import useExpenseQuery from '../../hooks/use-expense-query';
 import { reverseMonthLookup } from '../../lib/month-lookup';
 import CircularIndeterminate from '../circularLoadingBar';
