@@ -16,6 +16,7 @@ import Layout from '../components/layout';
 import React from 'react';
 import { useSession } from 'next-auth/react';
 import ExpenseCategories from '../components/expense/expenseCategories';
+import TotalUserReport from '../components/totalUserReport';
 
 export default function Analytics() {
   const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
@@ -42,7 +43,8 @@ export default function Analytics() {
 
   return (
     <Layout>
-      <Box sx={{ width: '90%', margin: '1rem auto' }}>
+      <TotalUserReport />
+      <Box sx={{ width: '90%', margin: '0 auto 5% auto' }}>
         <FormControl fullWidth>
           <InputLabel id='demo-simple-select-label'>Month</InputLabel>
           <Select

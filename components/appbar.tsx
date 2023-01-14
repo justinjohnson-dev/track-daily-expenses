@@ -32,7 +32,7 @@ function ResponsiveAppBar() {
     <AppBar
       position='sticky'
       color='inherit'
-      sx={{ backgroundColor: '#009879', color: 'white', margin: '0 0 10% 0' }}
+      sx={{ backgroundColor: '#009879', color: 'white' }}
     >
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
