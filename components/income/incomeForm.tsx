@@ -87,7 +87,7 @@ export default function IncomeForm() {
         style={{ margin: '1%', width: '100%' }}
         id='outlined-textarea'
         label='Expense Amount'
-        placeholder='3050.75'
+        placeholder='999.99'
         multiline
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           setIncomeForm({
