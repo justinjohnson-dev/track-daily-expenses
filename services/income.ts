@@ -5,6 +5,14 @@ export async function getAllIncomeReports() {
 }
 
 export async function getAllIncomeReportsByUser(userId) {
+  return prisma.income.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+}
+
+export async function getIncomeSummaryByUser(userId) {
   return prisma.income.groupBy({
     by: ['userId'],
     where: {

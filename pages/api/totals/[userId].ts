@@ -3,8 +3,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { StatusCodes } from 'http-status-codes';
 
-import { getAllIncomeReportsByUser } from '../../../services/income';
-import { getAllExpensesByUser } from '../../../services/expense';
+import { getIncomeSummaryByUser } from '../../../services/income';
+import { getExpenseSummaryByUser } from '../../../services/expense';
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,8 +12,8 @@ export default async function handler(
 ) {
   const { method, query } = req;
   if (method === 'GET') {
-    const incomeReports = await getAllIncomeReportsByUser(query.userId);
-    const expenseReports = await getAllExpensesByUser(query.userId);
+    const incomeReports = await getIncomeSummaryByUser(query.userId);
+    const expenseReports = await getExpenseSummaryByUser(query.userId);
 
     const income = {
       totalAmount: incomeReports[0]['_sum']['incomeAmount'],

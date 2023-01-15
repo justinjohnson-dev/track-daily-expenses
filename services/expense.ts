@@ -56,6 +56,14 @@ export async function getTopFiveExpenseCategoryAndSumSortDesc(userId) {
 // ])
 
 export async function getAllExpensesByUser(userId) {
+  return prisma.expenses.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+}
+
+export async function getExpenseSummaryByUser(userId) {
   return prisma.expenses.groupBy({
     by: ['userId'],
     where: {
