@@ -4,10 +4,70 @@ export async function getAllExpenses() {
   return prisma.expenses.findMany();
 }
 
-export async function getAllExpensesByUser(userId) {
-  return prisma.expenses.findMany({
+export async function getTopFiveExpenseCategoryAndSumSortDesc(userId) {
+  return prisma.expenses.groupBy({
+    by: ['expenseCategory'],
     where: {
-      userId: userId,
+      userId: {
+        equals: userId,
+      },
+    },
+    _sum: {
+      expenseAmount: true,
+    },
+    _count: {
+      expenseCategory: true,
+    },
+    orderBy: {
+      _count: {
+        expenseCategory: 'desc',
+      },
+    },
+    take: 5,
+  });
+
+  // return prisma.expenses.aggregate(
+  //   {
+  //     $match: {
+  //       $and: [{ userId: { $eq: '63bf09130474b38bcc8b6027' } }],
+  //     },
+  //   },
+  //   {
+  //     $group: {
+  //       _id: '$expenseCategory',
+  //       sum: { $sum: '$expenseAmount' },
+  //       count: { $sum: 1 },
+  //     },
+  //   }
+  // );
+}
+
+// mongo db query to get sum of all users expenses sorted from most/least
+// db.getCollection('expenses').aggregate({ $match: {
+//   $and: [
+//       { userId: { $eq: "63bf09130474b38bcc8b6027" } }
+//   ]
+// } },
+// { $group: { _id : "$expenseCategory", sum : { $sum: "$expenseAmount" } }}, {$sort: {sum:1}} );
+
+// mongodb user expense count and max
+// db.expenses.aggregate([
+//   {"$group" : {_id:"$userId", sum : { $sum: "$expenseAmount" },count:{$sum:1}}}, {$sort: {count:-1}}
+// ])
+
+export async function getAllExpensesByUser(userId) {
+  return prisma.expenses.groupBy({
+    by: ['userId'],
+    where: {
+      userId: {
+        equals: userId,
+      },
+    },
+    _sum: {
+      expenseAmount: true,
+    },
+    _count: {
+      expenseCategory: true,
     },
   });
 }
