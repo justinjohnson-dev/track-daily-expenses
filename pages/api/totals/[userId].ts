@@ -15,24 +15,19 @@ export default async function handler(
     const incomeReports = await getAllIncomeReportsByUser(query.userId);
     const expenseReports = await getAllExpensesByUser(query.userId);
 
-    const sumOfIncome =
-      Math.round(
-        incomeReports.reduce(
-          (runningSum: number, incomeEntry: any) =>
-            runningSum + incomeEntry.incomeAmount,
-          0
-        ) * 100
-      ) / 100;
+    const income = {
+      totalAmount: incomeReports[0]['_sum']['incomeAmount'],
+      numberOfTransactions: incomeReports[0]['_count']['incomeCategory'],
+    };
 
-    const sumOfExpense =
-      Math.round(
-        expenseReports.reduce(
-          (runningSum: number, expenseEntry: any) =>
-            runningSum + expenseEntry.expenseAmount,
-          0
-        ) * 100
-      ) / 100;
+    const expense = {
+      totalAmount: expenseReports[0]['_sum']['expenseAmount'],
+      numberOfTransactions: expenseReports[0]['_count']['expenseCategory'],
+    };
 
-    return res.status(StatusCodes.OK).send({ sumOfExpense, sumOfIncome });
+    return res.status(StatusCodes.OK).send({
+      income,
+      expense,
+    });
   }
 }

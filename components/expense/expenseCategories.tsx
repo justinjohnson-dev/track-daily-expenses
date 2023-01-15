@@ -14,17 +14,18 @@ export default function ExpenseCategories() {
   if (isLoadingExpenses) {
     return <CircularIndeterminate />;
   } else if (!isLoadingExpenses && Object.keys(expenseCategories).length) {
-    const keys = Object.keys(expenseCategories);
-
     return (
       <div style={{ padding: '2%', margin: '0 0 5% 0' }}>
         <h3>Top 5 expense categories</h3>
-        {keys.map((expenseCategory, index) => {
+        {expenseCategories.map((expense: object, index: number) => {
           return (
             <ExpenseCategoryButton
               key={index}
-              category={expenseCategory}
-              categoryValue={expenseCategories[expenseCategory]}
+              category={expense['expenseCategory']}
+              categoryValue={expense['_count']['expenseCategory']}
+              categoryAmount={
+                Math.round(expense['_sum']['expenseAmount'] * 100) / 100
+              }
             />
           );
         })}

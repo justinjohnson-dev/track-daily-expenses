@@ -3,11 +3,13 @@ import React from 'react';
 type categoryButtonProps = {
   category: string;
   categoryValue: number;
+  categoryAmount: number;
 };
 
 export default function ExpenseCategoryButton({
   category,
   categoryValue,
+  categoryAmount,
 }: categoryButtonProps) {
   return (
     <button
@@ -20,7 +22,7 @@ export default function ExpenseCategoryButton({
         height: '30px',
       }}
     >
-      {category} {categoryValue}
+      {category} {categoryValue} {categoryAmount}
     </button>
   );
 }

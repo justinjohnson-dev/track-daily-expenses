@@ -43,8 +43,7 @@ export default function Analytics() {
 
   return (
     <Layout>
-      <TotalUserReport />
-      <Box sx={{ width: '90%', margin: '0 auto 5% auto' }}>
+      <Box sx={{ width: '90%', margin: '8% auto 5% auto' }}>
         <FormControl fullWidth>
           <InputLabel id='demo-simple-select-label'>Month</InputLabel>
           <Select
@@ -70,8 +69,6 @@ export default function Analytics() {
         </FormControl>
       </Box>
       <ExpenseTable {...expenseTableProps} />
-      <hr />
-      <ExpenseCategories />
       <hr />
       <IncomeTable {...incomeTableProps} />
     </Layout>
