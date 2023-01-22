@@ -6,11 +6,19 @@ import React from 'react';
 import { useSession } from 'next-auth/react';
 import TotalUserReport from '../components/totalUserReport';
 import ExpenseCategories from '../components/expense/expenseCategories';
-import ExpenseCategoryAmounts from '../components/expense/expenseAmount';
+import useExpenseCategoryQuery from '../hooks/use-expense-categories-query';
+import useExpenseCategoryAmountQuery from '../hooks/use-expense-category-amount';
 
 export default function Home() {
   const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
-
+  const { data: expenseCategories, isLoading: isLoadingExpenses } =
+    useExpenseCategoryQuery(
+      status === 'authenticated' ? session?.user?.id : ''
+    );
+  const { data: expenseAmounts, isLoading: isLoadingExpenseAmounts } =
+    useExpenseCategoryAmountQuery(
+      status === 'authenticated' ? session?.user?.id : ''
+    );
   return (
     <Layout>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -35,8 +43,14 @@ export default function Home() {
           {status === 'authenticated' ? session?.user?.email : 'no user yet'}
         </p>
         <TotalUserReport />
-        <ExpenseCategories />
-        <ExpenseCategoryAmounts />
+        <ExpenseCategories
+          isLoadingExpenses={isLoadingExpenses}
+          expenseCategories={expenseCategories}
+        />
+        <ExpenseCategories
+          isLoadingExpenses={isLoadingExpenseAmounts}
+          expenseCategories={expenseAmounts}
+        />
       </div>
     </Layout>
   );

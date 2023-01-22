@@ -22,7 +22,7 @@ export default function ExpenseCategoryButton({
         height: '30px',
       }}
     >
-      {category} {categoryValue} {categoryAmount}
+      {category} {categoryValue} ${categoryAmount}
     </button>
   );
 }

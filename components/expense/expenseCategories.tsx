@@ -1,15 +1,16 @@
-import { useSession } from 'next-auth/react';
 import React from 'react';
-import useExpenseCategoryQuery from '../../hooks/use-expense-categories-query';
 import CircularIndeterminate from '../circularLoadingBar';
 import ExpenseCategoryButton from './expenseCategoryLabel';
 
-export default function ExpenseCategories() {
-  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
-  const { data: expenseCategories, isLoading: isLoadingExpenses } =
-    useExpenseCategoryQuery(
-      status === 'authenticated' ? session?.user?.id : ''
-    );
+interface expenseCategoryProps {
+  isLoadingExpenses: boolean;
+  expenseCategories: [object];
+}
+
+export default function ExpenseCategories({
+  isLoadingExpenses,
+  expenseCategories,
+}: expenseCategoryProps) {
   if (isLoadingExpenses) {
     return <CircularIndeterminate />;
   } else if (!isLoadingExpenses && Object.keys(expenseCategories).length) {
