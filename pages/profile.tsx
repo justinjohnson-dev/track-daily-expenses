@@ -6,6 +6,7 @@ import React from 'react';
 import { useSession } from 'next-auth/react';
 import TotalUserReport from '../components/totalUserReport';
 import ExpenseCategories from '../components/expense/expenseCategories';
+import ExpenseCategoryAmounts from '../components/expense/expenseAmount';
 
 export default function Home() {
   const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
@@ -35,6 +36,7 @@ export default function Home() {
         </p>
         <TotalUserReport />
         <ExpenseCategories />
+        <ExpenseCategoryAmounts />
       </div>
     </Layout>
   );

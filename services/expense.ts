@@ -63,6 +63,29 @@ export async function getAllExpensesByUser(userId) {
   });
 }
 
+export async function getExpensesByDescAmountForUser(userId) {
+  return prisma.expenses.groupBy({
+    by: ['expenseCategory'],
+    where: {
+      userId: {
+        equals: userId,
+      },
+    },
+    _sum: {
+      expenseAmount: true,
+    },
+    _count: {
+      expenseCategory: true,
+    },
+    orderBy: {
+      _sum: {
+        expenseAmount: 'desc',
+      },
+    },
+    take: 5,
+  });
+}
+
 export async function getExpenseSummaryByUser(userId) {
   return prisma.expenses.groupBy({
     by: ['userId'],

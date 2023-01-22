@@ -1,22 +1,22 @@
-import { useSession } from 'next-auth/react';
 import React from 'react';
-import useExpenseCategoryQuery from '../../hooks/use-expense-categories-query';
+import { useSession } from 'next-auth/react';
+import useExpenseCategoryAmountQuery from '../../hooks/use-expense-category-amount';
 import CircularIndeterminate from '../circularLoadingBar';
 import ExpenseCategoryButton from './expenseCategoryLabel';
 
-export default function ExpenseCategories() {
+export default function ExpenseCategoryAmounts() {
   const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
-  const { data: expenseCategories, isLoading: isLoadingExpenses } =
-    useExpenseCategoryQuery(
+  const { data: expenseAmounts, isLoading: isLoadingExpenses } =
+    useExpenseCategoryAmountQuery(
       status === 'authenticated' ? session?.user?.id : ''
     );
   if (isLoadingExpenses) {
     return <CircularIndeterminate />;
-  } else if (!isLoadingExpenses && Object.keys(expenseCategories).length) {
+  } else if (!isLoadingExpenses && Object.keys(expenseAmounts).length) {
     return (
       <div style={{ padding: '2%', margin: '0 0 5% 0' }}>
-        <h3>Top 5 expense categories</h3>
-        {expenseCategories.map((expense: object, index: number) => {
+        <h3>Top 5 expense amounts</h3>
+        {expenseAmounts.map((expense: object, index: number) => {
           return (
             <ExpenseCategoryButton
               key={index}
