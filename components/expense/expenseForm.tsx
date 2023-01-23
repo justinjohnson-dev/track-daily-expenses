@@ -3,15 +3,35 @@ import React, { useState } from 'react';
 
 import useExpenseMutation from '../../hooks/use-expense-mutation';
 import { useSession } from 'next-auth/react';
-
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  TextField,
+  Select,
+  Button,
+} from '@mui/material';
 
 interface ExpenseState {
   expense: string;
   expenseAmount: string;
   expenseCategory: string;
 }
+
+const LIST_OF_EXPENSE_CATEGORIES: string[] = [
+  'Utility',
+  'Rent',
+  'Groceries',
+  'Restaurant',
+  'Loan',
+  'Entertainment',
+  'Medical Bill',
+  'Gas',
+  'Wellness',
+  'Insurance',
+  'Shopping',
+  'Phone',
+];
 
 export default function expenseForm() {
   const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
@@ -96,20 +116,29 @@ export default function expenseForm() {
         }}
         value={expenseForm.expenseAmount}
       />
-      <TextField
-        style={{ margin: '1%', width: '100%' }}
-        id='outlined-textarea'
-        label='Expense Category'
-        placeholder='Food'
-        multiline
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setExpenseForm({
-            ...expenseForm,
-            expenseCategory: event.target.value,
-          });
-        }}
-        value={expenseForm.expenseCategory}
-      />
+      <FormControl fullWidth style={{ margin: '1%', width: '100%' }}>
+        <InputLabel id='demo-simple-select-label'>Expense Category</InputLabel>
+        <Select
+          labelId='demo-simple-select-label'
+          id='demo-simple-select'
+          value={expenseForm.expenseCategory}
+          label='Age'
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setExpenseForm({
+              ...expenseForm,
+              expenseCategory: event.target.value,
+            });
+          }}
+        >
+          {LIST_OF_EXPENSE_CATEGORIES.map((expense: string, index: number) => {
+            return (
+              <MenuItem key={index} value={expense}>
+                {expense}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
       <Button
         variant='outlined'
         style={{

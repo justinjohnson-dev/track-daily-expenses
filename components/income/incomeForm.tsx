@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 
-import useIncomeMutation from '../../hooks/use-income-mutation';
-
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-
 import { useSession } from 'next-auth/react';
+import useIncomeMutation from '../../hooks/use-income-mutation';
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  TextField,
+  Select,
+  Button,
+} from '@mui/material';
 
 interface IncomeState {
   incomeName: string;
   incomeAmount: string;
   incomeCategory: string;
 }
+
+const LIST_OF_INCOME_CATEGORIES: string[] = ['Paycheck', 'Refund', 'Gift'];
 
 export default function IncomeForm() {
   const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
@@ -97,20 +103,30 @@ export default function IncomeForm() {
         }}
         value={incomeForm.incomeAmount}
       />
-      <TextField
-        style={{ margin: '1%', width: '100%' }}
-        id='outlined-textarea'
-        label='Expense Category'
-        placeholder='Income'
-        multiline
-        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-          setIncomeForm({
-            ...incomeForm,
-            incomeCategory: event.target.value,
-          });
-        }}
-        value={incomeForm.incomeCategory}
-      />
+      <FormControl fullWidth style={{ margin: '1%', width: '100%' }}>
+        <InputLabel id='demo-simple-select-label'>Income Category</InputLabel>
+        <Select
+          labelId='demo-simple-select-label'
+          id='demo-simple-select'
+          value={incomeForm.incomeCategory}
+          label='Age'
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setIncomeForm({
+              ...incomeForm,
+              incomeCategory: event.target.value,
+            });
+          }}
+        >
+          {LIST_OF_INCOME_CATEGORIES.map((income: string, index: number) => {
+            return (
+              <MenuItem key={index} value={income}>
+                {income}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
+
       <Button
         variant='outlined'
         style={{
