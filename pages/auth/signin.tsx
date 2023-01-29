@@ -19,7 +19,17 @@ export default function Login() {
   });
 
   const handleFieldChange = (e: { target: { id: any; value: any } }) => {
-    setAuthState((old) => ({ ...old, [e.target.id]: e.target.value }));
+    if (e.target.id === 'password') {
+      setAuthState((old) => ({
+        ...old,
+        [e.target.id]: e.target.value,
+      }));
+    } else {
+      setAuthState((old) => ({
+        ...old,
+        [e.target.id]: e.target.value.toLowerCase(),
+      }));
+    }
   };
 
   const simplifyError = (error: string) => {

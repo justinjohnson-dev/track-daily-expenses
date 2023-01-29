@@ -8,6 +8,7 @@ export default function TotalUserReport() {
   const { data: totalReports, isLoading: isLoadingTotalReports } =
     useTotalReportQuery(status === 'authenticated' ? session.user.id : '');
 
+  console.log(totalReports);
   return (
     <>
       {isLoadingTotalReports && (
