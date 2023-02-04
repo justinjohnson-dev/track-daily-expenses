@@ -5,7 +5,7 @@ export async function getAllIncomeReports() {
 }
 
 export async function getAllIncomeReportsByUserByMonth(userId, month) {
-  return prisma.income.findMany({
+  return prisma.income.find({
     where: {
       userId: {
         equals: userId,
