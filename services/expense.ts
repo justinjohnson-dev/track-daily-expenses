@@ -11,17 +11,13 @@ export async function getTopFiveExpenseCategoryAndSumSortDescByMonth(
   return prisma.expenses.groupBy({
     by: ['expenseCategory'],
     where: {
-      userId: userId,
-      expenseMonth: month,
+      userId: {
+        equals: userId,
+      },
+      expenseMonth: {
+        equals: month,
+      },
     },
-    // where: {
-    //   userId: {
-    //     equals: userId,
-    //   },
-    //   expenseMonth: {
-    //     equals: month,
-    //   },
-    // },
     _sum: {
       expenseAmount: true,
     },
