@@ -47,6 +47,7 @@ export async function createIncomeReport(income_report: {
   incomeAmount: number;
   incomeCategory: string;
   incomeDate: string;
+  incomeMonth: number;
   userId: string;
 }) {
   return prisma.income.create({ data: income_report });
