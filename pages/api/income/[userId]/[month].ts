@@ -3,8 +3,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { StatusCodes } from 'http-status-codes';
 
-import { getAllIncomeReportsByUser } from '../../../../services/income';
-import formatToDatetimeAndFilterBySelectedMonth from '../../../../lib/find-reports-by-date';
+import { getAllIncomeReportsByUserByMonth } from '../../../../services/income';
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,14 +11,14 @@ export default async function handler(
 ) {
   const { method, query } = req;
   if (method === 'GET') {
-    const incomeReports = await getAllIncomeReportsByUser(query.userId);
-    const filteredReportsByDate = formatToDatetimeAndFilterBySelectedMonth(
-      incomeReports,
-      Number(query.month),
-      'income'
-    );
+    const userId = query.userId;
+    const month = query.month;
 
-    const sumOfIncome = filteredReportsByDate.reduce(
+    const incomeReports = await getAllIncomeReportsByUserByMonth(
+      userId,
+      Number(month)
+    );
+    const sumOfIncome = incomeReports.reduce(
       (runningSum: number, incomeEntry: any) =>
         runningSum + incomeEntry.incomeAmount,
       0
@@ -27,6 +26,6 @@ export default async function handler(
 
     return res
       .status(StatusCodes.OK)
-      .send({ data: filteredReportsByDate, runningSum: sumOfIncome });
+      .send({ data: incomeReports, runningSum: sumOfIncome });
   }
 }

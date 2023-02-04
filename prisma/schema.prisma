@@ -22,6 +22,7 @@ model income {
   incomeAmount   Float
   incomeCategory String
   incomeDate     String
+  incomeMonth    Int
   incomeName     String
   userId         String
 }

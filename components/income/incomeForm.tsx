@@ -49,6 +49,7 @@ export default function IncomeForm() {
           dateStyle: 'full',
           timeStyle: 'full',
         }),
+        incomeMonth: new Date().getMonth() + 1,
         userId: session?.user?.id,
       };
 

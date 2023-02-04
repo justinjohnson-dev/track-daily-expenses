@@ -3,8 +3,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { StatusCodes } from 'http-status-codes';
 
-import { getAllExpensesByUser } from '../../../../services/expense';
-import formatToDatetimeAndFilterBySelectedMonth from '../../../../lib/find-reports-by-date';
+import { getAllExpensesByUserByMonth } from '../../../../services/expense';
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,14 +11,11 @@ export default async function handler(
 ) {
   const { method, query } = req;
   if (method === 'GET') {
-    const expenses = await getAllExpensesByUser(query.userId);
-    const filteredReportsByDate = formatToDatetimeAndFilterBySelectedMonth(
-      expenses,
-      Number(query.month),
-      'expense'
-    );
+    const userId = query.userId;
+    const month = query.month;
 
-    const sumOfExpense = filteredReportsByDate.reduce(
+    const expenses = await getAllExpensesByUserByMonth(userId, Number(month));
+    const sumOfExpense = expenses.reduce(
       (runningSum: number, expenseEntry: any) =>
         runningSum + expenseEntry.expenseAmount,
       0
@@ -27,6 +23,6 @@ export default async function handler(
 
     return res
       .status(StatusCodes.OK)
-      .send({ data: filteredReportsByDate, runningSum: sumOfExpense });
+      .send({ data: expenses, runningSum: sumOfExpense });
   }
 }

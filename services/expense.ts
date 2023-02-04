@@ -84,6 +84,19 @@ export async function getTopFiveExpenseCategoryAndSumSortDesc(userId) {
 //   {"$group" : {_id:"$userId", sum : { $sum: "$expenseAmount" },count:{$sum:1}}}, {$sort: {count:-1}}
 // ])
 
+export async function getAllExpensesByUserByMonth(userId, month) {
+  return prisma.expenses.findMany({
+    where: {
+      userId: {
+        equals: userId,
+      },
+      expenseMonth: {
+        equals: month,
+      },
+    },
+  });
+}
+
 export async function getAllExpensesByUser(userId) {
   return prisma.expenses.findMany({
     where: {
