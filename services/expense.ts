@@ -163,6 +163,7 @@ export async function createExpense(daily_expense: {
   expenseAmount: number;
   expenseCategory: string;
   expenseDate: string;
+  expenseMonth: number;
   userId: string;
 }) {
   const expenseData = {
