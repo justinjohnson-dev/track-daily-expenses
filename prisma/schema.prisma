@@ -13,6 +13,7 @@ model expenses {
   expenseAmount   Float
   expenseCategory String
   expenseDate     String
+  expenseMonth    Int
   userId          String
 }
 

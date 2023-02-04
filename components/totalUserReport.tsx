@@ -77,6 +77,21 @@ export default function TotalUserReport() {
               {totalReports['income']['numberOfTransactions']}
             </p>
           </div>
+          <p
+            style={{
+              padding: 0,
+              marginTop: '5%',
+            }}
+          >
+            <span style={{ fontWeight: 'bold', marginRight: '5px' }}>
+              Total Expense to Income:
+            </span>
+            $
+            {Math.round(
+              totalReports['expense']['totalAmount'] -
+                totalReports['income']['totalAmount']
+            )}
+          </p>
         </div>
       )}
     </>

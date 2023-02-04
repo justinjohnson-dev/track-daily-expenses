@@ -4,6 +4,35 @@ export async function getAllExpenses() {
   return prisma.expenses.findMany();
 }
 
+export async function getTopFiveExpenseCategoryAndSumSortDescByMonth(
+  userId,
+  month
+) {
+  return prisma.expenses.groupBy({
+    by: ['expenseCategory'],
+    where: {
+      userId: {
+        equals: userId,
+      },
+      expenseMonth: {
+        equals: month,
+      },
+    },
+    _sum: {
+      expenseAmount: true,
+    },
+    _count: {
+      expenseCategory: true,
+    },
+    orderBy: {
+      _count: {
+        expenseCategory: 'desc',
+      },
+    },
+    take: 5,
+  });
+}
+
 export async function getTopFiveExpenseCategoryAndSumSortDesc(userId) {
   return prisma.expenses.groupBy({
     by: ['expenseCategory'],
@@ -60,6 +89,32 @@ export async function getAllExpensesByUser(userId) {
     where: {
       userId: userId,
     },
+  });
+}
+
+export async function getExpensesByDescAmountForUserByMonth(userId, month) {
+  return prisma.expenses.groupBy({
+    by: ['expenseCategory'],
+    where: {
+      userId: {
+        equals: userId,
+      },
+      expenseMonth: {
+        equals: month,
+      },
+    },
+    _sum: {
+      expenseAmount: true,
+    },
+    _count: {
+      expenseCategory: true,
+    },
+    orderBy: {
+      _sum: {
+        expenseAmount: 'desc',
+      },
+    },
+    take: 5,
   });
 }
 

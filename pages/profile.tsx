@@ -43,6 +43,7 @@ export default function Home() {
           {status === 'authenticated' ? session?.user?.email : 'no user yet'}
         </p>
         <TotalUserReport />
+
         <ExpenseCategories
           isLoadingExpenses={isLoadingExpenses}
           expenseCategories={expenseCategories}

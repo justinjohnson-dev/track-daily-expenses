@@ -57,6 +57,7 @@ export default function expenseForm() {
         expense: expenseForm.expense,
         expenseAmount: Number(expenseForm.expenseAmount),
         expenseCategory: expenseForm.expenseCategory,
+        expenseMonth: new Date().getMonth() + 1,
         expenseDate: new Date().toLocaleString('en-US', {
           timeZone: 'CST',
           dateStyle: 'full',
