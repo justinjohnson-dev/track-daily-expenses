@@ -14,7 +14,10 @@ export default async function handler(
     const userId = query.userId;
     const month = query.month;
 
-    const expenses = await getAllExpensesByUserByMonth(userId, Number(month));
+    const expenses = await getAllExpensesByUserByMonth(userId);
+    const finalExpenses = expenses.filter(
+      (record) => record.expenseMonth === Number(month)
+    );
     const sumOfExpense = expenses.reduce(
       (runningSum: number, expenseEntry: any) =>
         runningSum + expenseEntry.expenseAmount,
@@ -23,6 +26,6 @@ export default async function handler(
 
     return res
       .status(StatusCodes.OK)
-      .send({ data: expenses, runningSum: sumOfExpense });
+      .send({ data: finalExpenses, runningSum: sumOfExpense });
   }
 }
