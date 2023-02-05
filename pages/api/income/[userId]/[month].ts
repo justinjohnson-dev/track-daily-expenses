@@ -14,11 +14,12 @@ export default async function handler(
     const userId = query.userId;
     const month = query.month;
 
-    const incomeReports = await getAllIncomeReportsByUserByMonth(
-      userId,
-      Number(month)
+    const incomeReports = await getAllIncomeReportsByUserByMonth(userId);
+    const finalIncomeReports = incomeReports.filter(
+      (record) => record.incomeMonth === Number(month)
     );
-    const sumOfIncome = incomeReports.reduce(
+
+    const sumOfIncome = finalIncomeReports.reduce(
       (runningSum: number, incomeEntry: any) =>
         runningSum + incomeEntry.incomeAmount,
       0
@@ -26,6 +27,6 @@ export default async function handler(
 
     return res
       .status(StatusCodes.OK)
-      .send({ data: incomeReports, runningSum: sumOfIncome });
+      .send({ data: finalIncomeReports, runningSum: sumOfIncome });
   }
 }
