@@ -5,6 +5,16 @@ import { StatusCodes } from 'http-status-codes';
 
 import { getAllExpensesByUserByMonth } from '../../../../services/expense';
 
+interface expenseObject {
+  _id: string;
+  expense: string;
+  expenseAmount: number;
+  expenseCategory: string;
+  expenseDate: string;
+  userId: string;
+  expenseMonth: number;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -16,7 +26,7 @@ export default async function handler(
 
     const expenses = await getAllExpensesByUserByMonth(userId);
     const finalExpenses = expenses.filter(
-      (record) => record.expenseMonth === Number(month)
+      (record: expenseObject) => record.expenseMonth === Number(month)
     );
     const sumOfExpense = finalExpenses.reduce(
       (runningSum: number, expenseEntry: any) =>

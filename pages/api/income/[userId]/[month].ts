@@ -5,6 +5,16 @@ import { StatusCodes } from 'http-status-codes';
 
 import { getAllIncomeReportsByUserByMonth } from '../../../../services/income';
 
+interface IncomeObject {
+  _id: string;
+  incomeAmount: number;
+  incomeCategory: string;
+  incomeDate: string;
+  incomeName: string;
+  userId: string;
+  incomeMonth: number;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -16,7 +26,7 @@ export default async function handler(
 
     const incomeReports = await getAllIncomeReportsByUserByMonth(userId);
     const finalIncomeReports = incomeReports.filter(
-      (record) => record.incomeMonth === Number(month)
+      (record: IncomeObject) => record.incomeMonth === Number(month)
     );
 
     const sumOfIncome = finalIncomeReports.reduce(
