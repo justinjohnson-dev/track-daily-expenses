@@ -8,7 +8,6 @@ export default function TotalUserReport() {
   const { data: totalReports, isLoading: isLoadingTotalReports } =
     useTotalReportQuery(status === 'authenticated' ? session.user.id : '');
 
-  console.log(totalReports);
   return (
     <>
       {isLoadingTotalReports && (
@@ -84,12 +83,12 @@ export default function TotalUserReport() {
             }}
           >
             <span style={{ fontWeight: 'bold', marginRight: '5px' }}>
-              Total Expense to Income:
+              Total Income to Expense:
             </span>
             $
             {Math.round(
-              totalReports['expense']['totalAmount'] -
-                totalReports['income']['totalAmount']
+              totalReports['income']['totalAmount'] -
+                totalReports['expense']['totalAmount']
             )}
           </p>
         </div>
