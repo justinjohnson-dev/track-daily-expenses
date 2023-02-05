@@ -25,6 +25,7 @@ export default async function handler(
       0
     );
 
+    console.log(finalIncomeReports);
     return res
       .status(StatusCodes.OK)
       .send({ data: finalIncomeReports, runningSum: sumOfIncome });

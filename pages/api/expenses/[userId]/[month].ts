@@ -24,6 +24,7 @@ export default async function handler(
       0
     );
 
+    console.log(finalExpenses);
     return res
       .status(StatusCodes.OK)
       .send({ data: finalExpenses, runningSum: sumOfExpense });
