@@ -18,7 +18,7 @@ export default async function handler(
     const finalExpenses = expenses.filter(
       (record) => record.expenseMonth === Number(month)
     );
-    const sumOfExpense = expenses.reduce(
+    const sumOfExpense = finalExpenses.reduce(
       (runningSum: number, expenseEntry: any) =>
         runningSum + expenseEntry.expenseAmount,
       0
