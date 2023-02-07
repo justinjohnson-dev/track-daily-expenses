@@ -34,7 +34,10 @@ export default async function handler(
       0
     );
 
-    console.log(finalExpenses);
+    console.info('expenses');
+    console.info(expenses);
+    console.info('finalExpenses');
+    console.info(finalExpenses);
     return res
       .status(StatusCodes.OK)
       .send({ data: finalExpenses, runningSum: sumOfExpense });
