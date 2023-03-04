@@ -15,13 +15,13 @@ import useIncomeQuery from '../hooks/use-income-query';
 import Layout from '../components/layout';
 import React from 'react';
 import { useSession } from 'next-auth/react';
-import ExpenseCategories from '../components/expense/expenseCategories';
-import TotalUserReport from '../components/totalUserReport';
+import { TextField } from '@mui/material';
 
 export default function Analytics() {
   const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
   const currentMonth = new Date().getMonth() + 1;
   const [month, setMonth] = useState<number>(currentMonth);
+  const [searchTransaction, setSearchTransaction] = useState<string>('');
   const { data: income, isLoading: isLoadingIncome } = useIncomeQuery(
     status === 'authenticated' ? session.user.id : '',
     month
@@ -33,6 +33,7 @@ export default function Analytics() {
   const expenseTableProps = {
     month: month,
     currentIncomeSum: isLoadingIncome ? 0 : income.runningSum,
+    filterValue: searchTransaction,
   };
 
   const incomeTableProps = {
@@ -68,6 +69,22 @@ export default function Analytics() {
           </Select>
         </FormControl>
       </Box>
+      <TextField
+        style={{
+          display: 'flex',
+          width: '90%',
+          margin: 'auto',
+          paddingBottom: '1rem',
+        }}
+        id='outlined-textarea'
+        label='Search Transaction'
+        placeholder='Amazon'
+        multiline
+        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          setSearchTransaction(event.target.value);
+        }}
+        value={searchTransaction}
+      />
       <ExpenseTable {...expenseTableProps} />
       <hr />
       <IncomeTable {...incomeTableProps} />
