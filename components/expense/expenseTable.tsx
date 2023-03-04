@@ -1,30 +1,58 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import React from 'react';
+import React, { useState } from 'react';
 import useExpenseQuery from '../../hooks/use-expense-query';
 import { reverseMonthLookup } from '../../lib/month-lookup';
 import CircularIndeterminate from '../circularLoadingBar';
 import ExpenseTableItems from './expenseTableItems';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { useSession } from 'next-auth/react';
+import { TextField } from '@mui/material';
 
 type expenseTableProps = {
   month: number;
   currentIncomeSum: number;
+  filterValue: string;
 };
 
 export default function ExpenseTable({
   month,
   currentIncomeSum,
+  filterValue,
 }: expenseTableProps) {
   const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
   const { data: expenses, isLoading: isLoadingExpenses } = useExpenseQuery(
     status === 'authenticated' ? session.user.id : '',
     month
   );
+  const [amountSortDirectionAscending, setAmountSortDirectionAscending] =
+    useState<boolean>(false);
+
+  let filteredData = [];
 
   if (isLoadingExpenses) {
     return <CircularIndeterminate />;
   } else if (!isLoadingExpenses && expenses.data.length > 0) {
+    // THIS COULD BE SEPARATED TO MAKE THIS LESS COMPLICATED: TODO FOR LATER ;)
+    if (amountSortDirectionAscending) {
+      expenses.data.sort(
+        (a: { expenseAmount: number }, b: { expenseAmount: number }) =>
+          a.expenseAmount - b.expenseAmount
+      );
+    } else {
+      expenses.data.sort(
+        (a: { expenseAmount: number }, b: { expenseAmount: number }) =>
+          b.expenseAmount - a.expenseAmount
+      );
+    }
+    if (filterValue) {
+      filteredData = expenses.data.filter(
+        (expense: { [x: string]: string }) =>
+          expense['expense'].toLowerCase() &&
+          expense['expense'].toLowerCase().indexOf(filterValue) !== -1
+      );
+    }
     return (
       <>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -90,7 +118,44 @@ export default function ExpenseTable({
                     padding: '12px 15px',
                   }}
                 >
-                  Amount
+                  <button
+                    style={{
+                      textDecoration: 'none',
+                      color: 'white',
+                      fontWeight: 'bold',
+                      backgroundColor: 'transparent',
+                      outline: 'none',
+                      border: 'none',
+                    }}
+                    onClick={() =>
+                      setAmountSortDirectionAscending(
+                        !amountSortDirectionAscending
+                      )
+                    }
+                  >
+                    {amountSortDirectionAscending === true && (
+                      <span>
+                        Amount{' '}
+                        <KeyboardArrowUpIcon
+                          style={{
+                            height: '15px',
+                            position: 'absolute',
+                          }}
+                        />
+                      </span>
+                    )}
+                    {amountSortDirectionAscending === false && (
+                      <span>
+                        Amount{' '}
+                        <KeyboardArrowDownIcon
+                          style={{
+                            height: '15px',
+                            position: 'absolute',
+                          }}
+                        />
+                      </span>
+                    )}
+                  </button>
                 </th>
                 <th
                   style={{
@@ -111,7 +176,14 @@ export default function ExpenseTable({
             <tbody>
               {!isLoadingExpenses &&
                 expenses.data !== undefined &&
+                filteredData.length === 0 &&
                 expenses.data.map((expense: any, index: number) => {
+                  return <ExpenseTableItems key={index} data={expense} />;
+                })}
+
+              {!isLoadingExpenses &&
+                filteredData.length > 0 &&
+                filteredData.map((expense: any, index: number) => {
                   return <ExpenseTableItems key={index} data={expense} />;
                 })}
             </tbody>
