@@ -50,7 +50,9 @@ export default function ExpenseTable({
       filteredData = expenses.data.filter(
         (expense: { [x: string]: string }) =>
           expense['expense'].toLowerCase() &&
-          expense['expense'].toLowerCase().indexOf(filterValue) !== -1
+          expense['expense']
+            .toLowerCase()
+            .indexOf(filterValue.toLowerCase()) !== -1
       );
     }
     return (
