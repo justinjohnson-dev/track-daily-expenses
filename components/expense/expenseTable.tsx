@@ -141,6 +141,7 @@ export default function ExpenseTable({
                         <KeyboardArrowUpIcon
                           style={{
                             height: '15px',
+                            width: '15px',
                             position: 'absolute',
                           }}
                         />
@@ -152,6 +153,7 @@ export default function ExpenseTable({
                         <KeyboardArrowDownIcon
                           style={{
                             height: '15px',
+                            width: '15px',
                             position: 'absolute',
                           }}
                         />
