@@ -1,6 +1,6 @@
 import { useMutation } from 'react-query';
 
-import queryClient from '../lib/query-client';
+import queryClient from '../../lib/query-client';
 
 interface expenseEntry {
   expense: string;
@@ -24,6 +24,6 @@ export default function useExpenseMutation() {
       onSuccess: () => {
         queryClient.invalidateQueries('expenses');
       },
-    }
+    },
   );
 }

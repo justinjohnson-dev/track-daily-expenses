@@ -1,6 +1,6 @@
 import { useMutation } from 'react-query';
 
-import queryClient from '../lib/query-client';
+import queryClient from '../../lib/query-client';
 
 interface expenseEntry {
   id: string;
