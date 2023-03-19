@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react';
-import useExpenseQuery from '../../hooks/use-expense-query';
+import useExpenseQuery from '../../hooks/expense/use-expense-query';
 import { reverseMonthLookup } from '../../lib/month-lookup';
 import CircularIndeterminate from '../circularLoadingBar';
 import ExpenseTableItems from './expenseTableItems';
@@ -27,7 +27,6 @@ export default function ExpenseTable({
   );
   const [amountSortDirectionAscending, setAmountSortDirectionAscending] =
     useState<boolean>(false);
-
   let filteredData = [];
 
   if (isLoadingExpenses) {
@@ -36,7 +35,6 @@ export default function ExpenseTable({
     console.log(amountSortDirectionAscending);
     // THIS COULD BE SEPARATED TO MAKE THIS LESS COMPLICATED: TODO FOR LATER ;)
     if (amountSortDirectionAscending === true) {
-      console.log('inside ascending');
       expenses.data.sort(
         (a: { expenseAmount: number }, b: { expenseAmount: number }) =>
           a.expenseAmount - b.expenseAmount,

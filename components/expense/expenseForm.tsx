@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react';
 
-import useExpenseMutation from '../../hooks/use-expense-mutation';
+import useExpenseMutation from '../../hooks/expense/use-expense-mutation';
 import { useSession } from 'next-auth/react';
 import {
   FormControl,

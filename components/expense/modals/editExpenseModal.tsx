@@ -17,6 +17,9 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
+import useEditExpenseMutation from '../../../hooks/expense/use-expense-edit';
+import useDeleteExpenseMutation from '../../../hooks/expense/use-expense-delete';
+import { useSession } from 'next-auth/react';
 
 const LIST_OF_EXPENSE_CATEGORIES: string[] = [
   'Utility',
@@ -48,7 +51,13 @@ const Transition = React.forwardRef(function Transition(
 interface FullScreenEditExpenseModalProps {
   isEditModalActive: boolean;
   updateModalStatus: any;
-  expense: any;
+  expense: {
+    id: string;
+    expense: string;
+    expenseAmount: number;
+    expenseCategory: string;
+    expenseDate: string;
+  };
 }
 
 export default function FullScreenEditExpenseModal({
@@ -56,6 +65,10 @@ export default function FullScreenEditExpenseModal({
   updateModalStatus,
   isEditModalActive,
 }: FullScreenEditExpenseModalProps) {
+  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
+  const editExpenseMutation = useEditExpenseMutation();
+  const deleteExpenseMutation = useDeleteExpenseMutation(session.user.id);
+
   const handleClose = () => {
     updateModalStatus(false);
   };
@@ -63,11 +76,22 @@ export default function FullScreenEditExpenseModal({
   const [inEditProgressExpense, setInEditProgressExpense] =
     React.useState(expense);
 
-  // TODO: IF TABLE HAS BEEN FILTERED OR SORTED - MODAL IS
-  // GRABBING THE WRONG ID
-  const onSumbitUpdate = () => {
-    console.log('updating');
-    console.log(inEditProgressExpense);
+  const onSubmitUpdate = async () => {
+    const response = await editExpenseMutation.mutateAsync(
+      inEditProgressExpense,
+    );
+
+    if (response) handleClose();
+    updateModalStatus(false);
+  };
+
+  const onSubmitDelete = async () => {
+    const response = await deleteExpenseMutation.mutateAsync(
+      inEditProgressExpense,
+    );
+
+    if (response) handleClose();
+    updateModalStatus(false);
   };
 
   return (
@@ -97,10 +121,6 @@ export default function FullScreenEditExpenseModal({
             <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
               Edit Expense {}
             </Typography>
-            {/* <Button autoFocus color='inherit' onClick={handleClose}> */}
-            {/* <span style={{ fontSize: '20px' }}>Delete</span>{' '} */}
-
-            {/* </Button> */}
           </Toolbar>
         </AppBar>
         <div
@@ -148,7 +168,7 @@ export default function FullScreenEditExpenseModal({
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               setInEditProgressExpense({
                 ...inEditProgressExpense,
-                expenseAmount: event.target.value,
+                expenseAmount: Number(event.target.value),
               });
             }}
             value={inEditProgressExpense.expenseAmount}
@@ -196,7 +216,7 @@ export default function FullScreenEditExpenseModal({
               marginTop: '2%',
               float: 'right',
             }}
-            onClick={onSumbitUpdate}
+            onClick={onSubmitUpdate}
           >
             Update
           </Button>
@@ -206,7 +226,7 @@ export default function FullScreenEditExpenseModal({
               marginTop: '2%',
               float: 'left',
             }}
-            // onClick={onSubmitExpense}
+            onClick={onSubmitDelete}
           >
             Delete
             <DeleteOutlineIcon />

@@ -11,7 +11,7 @@ import Select from '@mui/material/Select';
 import ExpenseTable from '../components/expense/expenseTable';
 import IncomeTable from '../components/income/incomeTable';
 
-import useIncomeQuery from '../hooks/use-income-query';
+import useIncomeQuery from '../hooks/income/use-income-query';
 import Layout from '../components/layout';
 import React from 'react';
 import { useSession } from 'next-auth/react';
@@ -24,7 +24,7 @@ export default function Analytics() {
   const [searchTransaction, setSearchTransaction] = useState<string>('');
   const { data: income, isLoading: isLoadingIncome } = useIncomeQuery(
     status === 'authenticated' ? session.user.id : '',
-    month
+    month,
   );
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMonth(parseInt(event.target.value, 10));
@@ -96,7 +96,7 @@ export async function getServerSideProps(context) {
   const session = await unstable_getServerSession(
     context.req,
     context.res,
-    authOptions
+    authOptions,
   );
 
   if (!session) {

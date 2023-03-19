@@ -1,6 +1,6 @@
 import { useMutation } from 'react-query';
 
-import queryClient from '../lib/query-client';
+import queryClient from '../../lib/query-client';
 
 interface incomeEntry {
   incomeName: string;
@@ -23,6 +23,6 @@ export default function useIncomeMutation() {
       onSuccess: () => {
         queryClient.invalidateQueries('income');
       },
-    }
+    },
   );
 }

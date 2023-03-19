@@ -7,7 +7,7 @@ import { getExpensesByDescAmountForUserByMonth } from '../../../../../services/e
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { method, query } = req;
   if (method === 'GET') {
@@ -15,7 +15,10 @@ export default async function handler(
     const userId = query.userId;
 
     const userExpenseMetricsByMonth =
-      await getExpensesByDescAmountForUserByMonth(userId, Number(month));
+      await getExpensesByDescAmountForUserByMonth(
+        String(userId),
+        Number(month),
+      );
 
     return res.status(StatusCodes.OK).send(userExpenseMetricsByMonth);
   }
