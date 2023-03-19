@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState } from 'react';
-import useExpenseQuery from '../../hooks/use-expense-query';
+import useExpenseQuery from '../../hooks/expense/use-expense-query';
 import { reverseMonthLookup } from '../../lib/month-lookup';
 import CircularIndeterminate from '../circularLoadingBar';
 import ExpenseTableItems from './expenseTableItems';
@@ -8,7 +8,6 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { useSession } from 'next-auth/react';
-import { TextField } from '@mui/material';
 
 type expenseTableProps = {
   month: number;
@@ -24,26 +23,25 @@ export default function ExpenseTable({
   const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
   const { data: expenses, isLoading: isLoadingExpenses } = useExpenseQuery(
     status === 'authenticated' ? session.user.id : '',
-    month
+    month,
   );
   const [amountSortDirectionAscending, setAmountSortDirectionAscending] =
     useState<boolean>(false);
-
   let filteredData = [];
 
   if (isLoadingExpenses) {
     return <CircularIndeterminate />;
   } else if (!isLoadingExpenses && expenses.data.length > 0) {
     // THIS COULD BE SEPARATED TO MAKE THIS LESS COMPLICATED: TODO FOR LATER ;)
-    if (amountSortDirectionAscending) {
+    if (amountSortDirectionAscending === true) {
       expenses.data.sort(
         (a: { expenseAmount: number }, b: { expenseAmount: number }) =>
-          a.expenseAmount - b.expenseAmount
+          a.expenseAmount - b.expenseAmount,
       );
     } else {
       expenses.data.sort(
         (a: { expenseAmount: number }, b: { expenseAmount: number }) =>
-          b.expenseAmount - a.expenseAmount
+          b.expenseAmount - a.expenseAmount,
       );
     }
     if (filterValue) {
@@ -52,9 +50,28 @@ export default function ExpenseTable({
           expense['expense'].toLowerCase() &&
           expense['expense']
             .toLowerCase()
-            .indexOf(filterValue.toLowerCase()) !== -1
+            .indexOf(filterValue.toLowerCase()) !== -1,
       );
     }
+
+    const tableBodyData = () => {
+      if (
+        !isLoadingExpenses &&
+        expenses.data !== undefined &&
+        filteredData.length === 0
+      ) {
+        return expenses.data.map((expense: any, index: number) => {
+          return <ExpenseTableItems key={index} data={expense} />;
+        });
+      }
+
+      if (!isLoadingExpenses && filteredData.length > 0) {
+        return filteredData.map((expense: any, index: number) => {
+          return <ExpenseTableItems key={index} data={expense} />;
+        });
+      }
+    };
+
     return (
       <>
         <div style={{ display: 'flex', flexDirection: 'row' }}>
@@ -85,18 +102,18 @@ export default function ExpenseTable({
             I/E: $
             {Math.round(
               Math.round(currentIncomeSum * 100) / 100 -
-                Math.round(expenses.runningSum * 100) / 100
+                Math.round(expenses.runningSum * 100) / 100,
             )}
           </code>
         </div>
-        <div>
+        <div style={{ margin: '25px 0' }}>
           <table
             style={{
+              margin: '0 auto',
+              width: '95%',
               borderCollapse: 'collapse',
-              margin: '25px 0',
               fontSize: '0.9em',
               fontFamily: 'sans-serif',
-              minWidth: '400px',
               boxShadow: '0 0 20px rgba(0, 0, 0, 0.15)',
             }}
           >
@@ -131,7 +148,7 @@ export default function ExpenseTable({
                     }}
                     onClick={() =>
                       setAmountSortDirectionAscending(
-                        !amountSortDirectionAscending
+                        !amountSortDirectionAscending,
                       )
                     }
                   >
@@ -165,32 +182,10 @@ export default function ExpenseTable({
                   style={{
                     padding: '12px 15px',
                   }}
-                >
-                  Category
-                </th>
-                <th
-                  style={{
-                    padding: '12px 15px',
-                  }}
-                >
-                  Date
-                </th>
+                ></th>
               </tr>
             </thead>
-            <tbody>
-              {!isLoadingExpenses &&
-                expenses.data !== undefined &&
-                filteredData.length === 0 &&
-                expenses.data.map((expense: any, index: number) => {
-                  return <ExpenseTableItems key={index} data={expense} />;
-                })}
-
-              {!isLoadingExpenses &&
-                filteredData.length > 0 &&
-                filteredData.map((expense: any, index: number) => {
-                  return <ExpenseTableItems key={index} data={expense} />;
-                })}
-            </tbody>
+            <tbody>{tableBodyData()}</tbody>
           </table>{' '}
         </div>
       </>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { useSession } from 'next-auth/react';
-import useIncomeMutation from '../../hooks/use-income-mutation';
+import useIncomeMutation from '../../hooks/income/use-income-mutation';
 import {
   FormControl,
   InputLabel,
