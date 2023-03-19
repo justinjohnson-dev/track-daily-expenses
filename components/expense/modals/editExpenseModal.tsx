@@ -17,8 +17,8 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import useEditExpenseMutation from '../../../hooks/use-expense-edit';
-import useDeleteExpenseMutation from '../../../hooks/use-expense-delete';
+import useEditExpenseMutation from '../../../hooks/expense/use-expense-edit';
+import useDeleteExpenseMutation from '../../../hooks/expense/use-expense-delete';
 import { useSession } from 'next-auth/react';
 
 const LIST_OF_EXPENSE_CATEGORIES: string[] = [

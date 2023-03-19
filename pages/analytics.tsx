@@ -11,7 +11,7 @@ import Select from '@mui/material/Select';
 import ExpenseTable from '../components/expense/expenseTable';
 import IncomeTable from '../components/income/incomeTable';
 
-import useIncomeQuery from '../hooks/use-income-query';
+import useIncomeQuery from '../hooks/income/use-income-query';
 import Layout from '../components/layout';
 import React from 'react';
 import { useSession } from 'next-auth/react';
