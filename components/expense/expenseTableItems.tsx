@@ -22,7 +22,6 @@ export default function ExpenseTableItems({
     expenseCategory,
     expenseDate,
   };
-  console.log(expenseRow);
   const [isModalActive, setIsModalActive] = useState(false);
 
   const updateModalStatus = (value: boolean) => {
@@ -57,12 +56,13 @@ export default function ExpenseTableItems({
         <span style={{ display: 'flex' }}>
           {' '}
           <EditIcon onClick={() => setIsModalActive(true)} />
-          {/* TODO: make this only render when needed not for every row*/}
-          <FullScreenEditExpenseModal
-            expense={expenseRow}
-            isEditModalActive={isModalActive}
-            updateModalStatus={updateModalStatus}
-          />
+          {isModalActive === true && (
+            <FullScreenEditExpenseModal
+              expense={expenseRow}
+              isEditModalActive={isModalActive}
+              updateModalStatus={updateModalStatus}
+            />
+          )}
         </span>
       </td>
     </tr>

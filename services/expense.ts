@@ -5,18 +5,18 @@ export async function getAllExpenses() {
 }
 
 export async function editUserExpense(expense: {
-  _id: string;
+  id: string;
   expense: string;
   expenseAmount: number;
   expenseCategory: string;
 }) {
   return await prisma.expenses.update({
     where: {
-      id: expense._id,
+      id: expense.id,
     },
     data: {
       expense: expense.expense,
-      expenseAmount: expense.expenseAmount,
+      expenseAmount: Number(expense.expenseAmount),
       expenseCategory: expense.expenseCategory,
     },
   });

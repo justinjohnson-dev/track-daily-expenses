@@ -8,6 +8,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import { useSession } from 'next-auth/react';
+import { Button } from '@mui/material';
 
 type expenseTableProps = {
   month: number;
@@ -27,29 +28,24 @@ export default function ExpenseTable({
   );
   const [amountSortDirectionAscending, setAmountSortDirectionAscending] =
     useState<boolean>(false);
-
   let filteredData = [];
 
   if (isLoadingExpenses) {
     return <CircularIndeterminate />;
   } else if (!isLoadingExpenses && expenses.data.length > 0) {
-    console.log(amountSortDirectionAscending);
     // THIS COULD BE SEPARATED TO MAKE THIS LESS COMPLICATED: TODO FOR LATER ;)
     if (amountSortDirectionAscending === true) {
-      console.log('inside ascending');
       expenses.data.sort(
         (a: { expenseAmount: number }, b: { expenseAmount: number }) =>
           a.expenseAmount - b.expenseAmount,
       );
     } else {
-      console.log('inside descending');
       expenses.data.sort(
         (a: { expenseAmount: number }, b: { expenseAmount: number }) =>
           b.expenseAmount - a.expenseAmount,
       );
     }
     if (filterValue) {
-      console.log('inside filter');
       filteredData = expenses.data.filter(
         (expense: { [x: string]: string }) =>
           expense['expense'].toLowerCase() &&

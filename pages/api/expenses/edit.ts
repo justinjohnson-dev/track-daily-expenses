@@ -11,6 +11,7 @@ export default async function handler(
 ) {
   const { method, body } = req;
   if (method === 'PUT') {
+    console.log(body);
     const edittedExpense = await editUserExpense(body);
 
     return res.status(StatusCodes.OK).send(edittedExpense);
