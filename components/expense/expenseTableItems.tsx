@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import EditIcon from '@mui/icons-material/Edit';
+import FullScreenEditExpenseModal from './modals/editExpenseModal';
 
 interface ExpenseProps {
   data: {
+    id: string;
     expense: string;
     expenseAmount: number;
     expenseCategory: string;
@@ -10,10 +13,22 @@ interface ExpenseProps {
 }
 
 export default function ExpenseTableItems({
-  data: { expense, expenseAmount, expenseCategory, expenseDate },
+  data: { id, expense, expenseAmount, expenseCategory, expenseDate },
 }: ExpenseProps) {
-  const dateCutoffValue = expenseDate.indexOf(' at '); // space between at to avoid 'at' in 'Saturday'
-  const stringDateToConvert = expenseDate.substring(0, dateCutoffValue);
+  const expenseRow = {
+    id,
+    expense,
+    expenseAmount,
+    expenseCategory,
+    expenseDate,
+  };
+  console.log(expenseRow);
+  const [isModalActive, setIsModalActive] = useState(false);
+
+  const updateModalStatus = (value: boolean) => {
+    setIsModalActive(value);
+  };
+
   return (
     <tr
       style={{
@@ -39,14 +54,16 @@ export default function ExpenseTableItems({
           padding: '12px 15px',
         }}
       >
-        {expenseCategory}
-      </td>
-      <td
-        style={{
-          padding: '12px 15px',
-        }}
-      >
-        {stringDateToConvert}
+        <span style={{ display: 'flex' }}>
+          {' '}
+          <EditIcon onClick={() => setIsModalActive(true)} />
+          {/* TODO: make this only render when needed not for every row*/}
+          <FullScreenEditExpenseModal
+            expense={expenseRow}
+            isEditModalActive={isModalActive}
+            updateModalStatus={updateModalStatus}
+          />
+        </span>
       </td>
     </tr>
   );

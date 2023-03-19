@@ -30,8 +30,10 @@ const LIST_OF_EXPENSE_CATEGORIES: string[] = [
   'Wellness',
   'Insurance',
   'Shopping',
+  'Shopping Necessities',
   'Phone',
   'Vacation',
+  'Travel',
 ];
 
 export default function expenseForm() {
