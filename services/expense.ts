@@ -80,35 +80,7 @@ export async function getTopFiveExpenseCategoryAndSumSortDesc(userId: string) {
     },
     take: 5,
   });
-
-  // return prisma.expenses.aggregate(
-  //   {
-  //     $match: {
-  //       $and: [{ userId: { $eq: '63bf09130474b38bcc8b6027' } }],
-  //     },
-  //   },
-  //   {
-  //     $group: {
-  //       _id: '$expenseCategory',
-  //       sum: { $sum: '$expenseAmount' },
-  //       count: { $sum: 1 },
-  //     },
-  //   }
-  // );
 }
-
-// mongo db query to get sum of all users expenses sorted from most/least
-// db.getCollection('expenses').aggregate({ $match: {
-//   $and: [
-//       { userId: { $eq: "63bf09130474b38bcc8b6027" } }
-//   ]
-// } },
-// { $group: { _id : "$expenseCategory", sum : { $sum: "$expenseAmount" } }}, {$sort: {sum:1}} );
-
-// mongodb user expense count and max
-// db.expenses.aggregate([
-//   {"$group" : {_id:"$userId", sum : { $sum: "$expenseAmount" },count:{$sum:1}}}, {$sort: {count:-1}}
-// ])
 
 export async function getAllExpensesByUserByMonth(userId: string) {
   return prisma.expenses.findMany({
