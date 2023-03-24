@@ -34,6 +34,7 @@ const LIST_OF_EXPENSE_CATEGORIES: string[] = [
   'Phone',
   'Vacation',
   'Travel',
+  'Subscriptions',
 ];
 
 export default function expenseForm() {
