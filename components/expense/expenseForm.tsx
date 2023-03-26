@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 
 import useExpenseMutation from '../../hooks/expense/use-expense-mutation';
-import { useSession } from 'next-auth/react';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import {
   FormControl,
   InputLabel,
@@ -34,10 +34,13 @@ const LIST_OF_EXPENSE_CATEGORIES: string[] = [
   'Phone',
   'Vacation',
   'Travel',
+  'Subscriptions',
 ];
 
 export default function expenseForm() {
-  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
+  const { user, error, isLoading } = useUser();
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
 
   const expenseMutation = useExpenseMutation();
   const [expenseForm, setExpenseForm] = useState<ExpenseState>({
@@ -66,7 +69,7 @@ export default function expenseForm() {
           dateStyle: 'full',
           timeStyle: 'full',
         }),
-        userId: session?.user?.id,
+        userId: user.sub,
       };
 
       await expenseMutation.mutateAsync(expense);

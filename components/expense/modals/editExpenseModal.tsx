@@ -19,7 +19,7 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import useEditExpenseMutation from '../../../hooks/expense/use-expense-edit';
 import useDeleteExpenseMutation from '../../../hooks/expense/use-expense-delete';
-import { useSession } from 'next-auth/react';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const LIST_OF_EXPENSE_CATEGORIES: string[] = [
   'Utility',
@@ -65,9 +65,9 @@ export default function FullScreenEditExpenseModal({
   updateModalStatus,
   isEditModalActive,
 }: FullScreenEditExpenseModalProps) {
-  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
+  const { user, error, isLoading } = useUser();
   const editExpenseMutation = useEditExpenseMutation();
-  const deleteExpenseMutation = useDeleteExpenseMutation(session.user.id);
+  const deleteExpenseMutation = useDeleteExpenseMutation(user.sub);
 
   const handleClose = () => {
     updateModalStatus(false);
