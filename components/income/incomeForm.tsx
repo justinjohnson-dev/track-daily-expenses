@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { useSession } from 'next-auth/react';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import useIncomeMutation from '../../hooks/income/use-income-mutation';
 import {
   FormControl,
@@ -20,7 +20,7 @@ interface IncomeState {
 const LIST_OF_INCOME_CATEGORIES: string[] = ['Paycheck', 'Refund', 'Gift'];
 
 export default function IncomeForm() {
-  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
+  const { user, error, isLoading } = useUser();
 
   const incomeMutation = useIncomeMutation();
 
@@ -50,7 +50,7 @@ export default function IncomeForm() {
           timeStyle: 'full',
         }),
         incomeMonth: new Date().getMonth() + 1,
-        userId: session?.user?.id,
+        userId: user.sub,
       };
 
       await incomeMutation.mutateAsync(income);

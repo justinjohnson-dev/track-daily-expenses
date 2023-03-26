@@ -1,26 +1,19 @@
-import { unstable_getServerSession } from 'next-auth/next';
-import { authOptions } from './api/auth/[...nextauth]';
-
 import Layout from '../components/layout';
-import React from 'react';
-import { useSession } from 'next-auth/react';
+import React, { useEffect } from 'react';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import TotalUserReport from '../components/totalUserReport';
 import ExpenseCategories from '../components/expense/expenseCategories';
 import useExpenseCategoryQuery from '../hooks/expense/use-expense-categories-query';
 import useExpenseCategoryAmountQuery from '../hooks/expense/use-expense-category-amount';
+import { useRouter } from 'next/router';
 
-export default function Home() {
-  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
+const ProfilePage = ({ user }: any) => {
   const { data: expenseCategories, isLoading: isLoadingExpenses } =
-    useExpenseCategoryQuery(
-      status === 'authenticated' ? session?.user?.id : '',
-    );
+    useExpenseCategoryQuery(user.sub);
   const { data: expenseAmounts, isLoading: isLoadingExpenseAmounts } =
-    useExpenseCategoryAmountQuery(
-      status === 'authenticated' ? session?.user?.id : '',
-    );
+    useExpenseCategoryAmountQuery(user.sub);
   return (
-    <Layout>
+    <Layout user={user}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <p
           style={{
@@ -30,7 +23,7 @@ export default function Home() {
           }}
         >
           <span style={{ fontWeight: 'bold' }}>Username: </span>
-          {status === 'authenticated' ? session?.user?.username : 'no user yet'}
+          {user.name}
         </p>
         <p
           style={{
@@ -40,7 +33,7 @@ export default function Home() {
           }}
         >
           <span style={{ fontWeight: 'bold' }}>Email: </span>
-          {status === 'authenticated' ? session?.user?.email : 'no user yet'}
+          {user.nickname}
         </p>
         <TotalUserReport />
 
@@ -55,27 +48,26 @@ export default function Home() {
       </div>
     </Layout>
   );
-}
+};
 
-export async function getServerSideProps(context) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions,
-  );
+const Profile = () => {
+  const router = useRouter();
+  const { user, error, isLoading } = useUser();
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/auth/signin',
-        permanent: false,
-      },
-    };
+  useEffect(() => {
+    if (!user) {
+      router.push('/api/auth/login');
+    }
+  }, [user, router]);
+
+  // will make this better later
+  // if (isLoading) return <div>Loading...</div>;
+
+  if (error) return <div>{error.message}</div>;
+
+  if (user) {
+    return <ProfilePage user={user} />;
   }
+};
 
-  return {
-    props: {
-      session,
-    },
-  };
-}
+export default Profile;

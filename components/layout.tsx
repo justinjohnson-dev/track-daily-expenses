@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 import ResponsiveAppBar from './appbar';
 
-export default function Layout({ children }) {
+export default function Layout({ children, user }) {
   return (
     <>
       <Head>
@@ -18,7 +18,7 @@ export default function Layout({ children }) {
           minHeight: '100vh',
         }}
       >
-        <ResponsiveAppBar />
+        <ResponsiveAppBar user={user} />
         {children}
       </main>
       <footer
