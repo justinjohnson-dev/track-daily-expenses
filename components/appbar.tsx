@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @next/next/no-html-link-for-pages */
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -12,7 +14,6 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import MoneyIcon from '@mui/icons-material/Money';
-import { signOut } from 'next-auth/react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import Link from 'next/link';
@@ -20,12 +21,12 @@ import Link from 'next/link';
 const pages = ['Home', 'Analytics'];
 const settings = ['Profile', 'Logout'];
 
-function ResponsiveAppBar() {
+const ResponsiveAppBarInformation = ({ user }) => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null
+    null,
   );
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
+    null,
   );
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -172,11 +173,15 @@ function ResponsiveAppBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <AccountCircleIcon
-                  sx={{
-                    color: 'white',
-                  }}
-                />
+                {user ? (
+                  <Avatar alt={user?.name} src={user?.picture} />
+                ) : (
+                  <AccountCircleIcon
+                    sx={{
+                      color: 'white',
+                    }}
+                  />
+                )}
               </IconButton>
             </Tooltip>
             <Menu
@@ -206,8 +211,13 @@ function ResponsiveAppBar() {
                     </Link>
                   )}
                   {setting === 'Logout' && (
-                    <Typography textAlign='center' onClick={() => signOut()}>
-                      {setting}
+                    <Typography textAlign='center'>
+                      <a
+                        style={{ textDecoration: 'none', color: 'black' }}
+                        href='/api/auth/logout'
+                      >
+                        Logout
+                      </a>
                     </Typography>
                   )}
                 </MenuItem>
@@ -218,5 +228,13 @@ function ResponsiveAppBar() {
       </Container>
     </AppBar>
   );
-}
+};
+
+const ResponsiveAppBar = ({ user }) => {
+  // if (user == null) {
+  //   return null;
+  // }
+
+  return <ResponsiveAppBarInformation user={user} />;
+};
 export default ResponsiveAppBar;

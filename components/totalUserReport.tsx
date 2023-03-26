@@ -1,12 +1,15 @@
 import CircularIndeterminate from '../components/circularLoadingBar';
 import useTotalReportQuery from '../hooks/use-total-query';
 
-import { useSession } from 'next-auth/react';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function TotalUserReport() {
-  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
+  const { user, error, isLoading } = useUser();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
   const { data: totalReports, isLoading: isLoadingTotalReports } =
-    useTotalReportQuery(status === 'authenticated' ? session.user.id : '');
+    useTotalReportQuery(user.sub);
 
   return (
     <>
@@ -88,7 +91,7 @@ export default function TotalUserReport() {
             $
             {Math.round(
               totalReports['income']['totalAmount'] -
-                totalReports['expense']['totalAmount']
+                totalReports['expense']['totalAmount'],
             )}
           </p>
         </div>

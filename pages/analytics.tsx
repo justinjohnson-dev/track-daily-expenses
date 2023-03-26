@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { unstable_getServerSession } from 'next-auth/next';
-import { authOptions } from './api/auth/[...nextauth]';
+import { useRouter } from 'next/router';
+
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -14,16 +14,17 @@ import IncomeTable from '../components/income/incomeTable';
 import useIncomeQuery from '../hooks/income/use-income-query';
 import Layout from '../components/layout';
 import React from 'react';
-import { useSession } from 'next-auth/react';
+
+import { useUser } from '@auth0/nextjs-auth0/client';
+
 import { TextField } from '@mui/material';
 
-export default function Analytics() {
-  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
+const AnalyticsComponent = ({ user }: any) => {
   const currentMonth = new Date().getMonth() + 1;
   const [month, setMonth] = useState<number>(currentMonth);
   const [searchTransaction, setSearchTransaction] = useState<string>('');
   const { data: income, isLoading: isLoadingIncome } = useIncomeQuery(
-    status === 'authenticated' ? session.user.id : '',
+    user.sub,
     month,
   );
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +32,7 @@ export default function Analytics() {
   };
 
   const expenseTableProps = {
+    sub: user.sub,
     month: month,
     currentIncomeSum: isLoadingIncome ? 0 : income.runningSum,
     filterValue: searchTransaction,
@@ -43,7 +45,7 @@ export default function Analytics() {
   };
 
   return (
-    <Layout>
+    <Layout user={user}>
       <Box sx={{ width: '90%', margin: '8% auto 5% auto' }}>
         <FormControl fullWidth>
           <InputLabel id='demo-simple-select-label'>Month</InputLabel>
@@ -90,27 +92,21 @@ export default function Analytics() {
       <IncomeTable {...incomeTableProps} />
     </Layout>
   );
-}
+};
 
-export async function getServerSideProps(context) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions,
-  );
+const Analytics = () => {
+  const router = useRouter();
+  const { user, error, isLoading } = useUser();
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/auth/signin',
-        permanent: false,
-      },
-    };
+  useEffect(() => {
+    if (!user) {
+      router.push('/api/auth/login');
+    }
+  }, [user, router]);
+
+  if (user) {
+    return <AnalyticsComponent user={user} />;
   }
+};
 
-  return {
-    props: {
-      session,
-    },
-  };
-}
+export default Analytics;

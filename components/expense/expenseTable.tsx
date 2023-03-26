@@ -7,22 +7,23 @@ import ExpenseTableItems from './expenseTableItems';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-import { useSession } from 'next-auth/react';
+import { User } from '../../interfaces';
 
 type expenseTableProps = {
+  sub: string;
   month: number;
   currentIncomeSum: number;
   filterValue: string;
 };
 
 export default function ExpenseTable({
+  sub,
   month,
   currentIncomeSum,
   filterValue,
 }: expenseTableProps) {
-  const { data: session, status } = useSession() as any; // temp resolving user?.id missed type from nextauth
   const { data: expenses, isLoading: isLoadingExpenses } = useExpenseQuery(
-    status === 'authenticated' ? session.user.id : '',
+    sub,
     month,
   );
   const [amountSortDirectionAscending, setAmountSortDirectionAscending] =
