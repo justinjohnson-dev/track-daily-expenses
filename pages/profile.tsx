@@ -32,7 +32,7 @@ const ProfilePage = ({ user }: any) => {
             margin: '0 0 0 5%',
           }}
         >
-          <span style={{ fontWeight: 'bold' }}>Email: </span>
+          <span style={{ fontWeight: 'bold' }}>Nickname: </span>
           {user.nickname}
         </p>
         <TotalUserReport />
