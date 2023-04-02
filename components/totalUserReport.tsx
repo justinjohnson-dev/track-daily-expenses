@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import CircularIndeterminate from '../components/circularLoadingBar';
 import useTotalReportQuery from '../hooks/use-total-query';
 
@@ -19,14 +20,7 @@ export default function TotalUserReport() {
         </>
       )}
       {!isLoadingTotalReports && (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'left',
-            padding: '1rem',
-          }}
-        >
+        <div>
           <div
             style={{
               display: 'flex',
@@ -47,9 +41,10 @@ export default function TotalUserReport() {
               style={{
                 padding: 0,
                 margin: 0,
+                width: '135px',
               }}
             >
-              <span style={{ fontWeight: 'bold' }}>Transaction Total</span>{' '}
+              <span style={{ fontWeight: 'bold' }}># Transactions</span>{' '}
               {totalReports['expense']['numberOfTransactions']}
             </p>
           </div>
@@ -73,9 +68,10 @@ export default function TotalUserReport() {
               style={{
                 padding: 0,
                 margin: 0,
+                width: '135px',
               }}
             >
-              <span style={{ fontWeight: 'bold' }}>Transaction Total</span>{' '}
+              <span style={{ fontWeight: 'bold' }}># Transactions</span>{' '}
               {totalReports['income']['numberOfTransactions']}
             </p>
           </div>
