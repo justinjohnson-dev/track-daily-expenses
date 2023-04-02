@@ -4,8 +4,8 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import TotalUserReport from '../components/totalUserReport';
 import { useRouter } from 'next/router';
 
-import PieChart from '../components/charts/pieChart';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import Chart from '../components/charts/chart';
 
 const ProfilePage = ({ user }: any) => {
   // month selector could be put into custom component as it is used more than once
@@ -100,8 +100,8 @@ const ProfilePage = ({ user }: any) => {
               </FormControl>
             </Box>
           )}
-          <PieChart user={user} dateRange={dateRangeSelector} />
-          {/* <ExpenseCategories dateRangeSelector={dateRangeSelector} />{' '} */}
+          <Chart user={user} dateRange={dateRangeSelector} month={month}/>
+          {/* <ExpenseCategories dateRangeSelector={dateRangeSelect or} />{' '} */}
         </div>
       </div>
     </Layout>

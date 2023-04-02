@@ -2,14 +2,14 @@ import { useQuery } from 'react-query';
 
 export default function useExpenseCategoryAmountQueryByMonth(
   userId: string,
-  month: number
+  month: number,
 ) {
   return useQuery(
-    ['expenseAmounts', userId],
+    ['expenseAmountsByMonth', month],
     () =>
       fetch(`/api/expenses/${userId}/${month}/amount`).then((res) =>
-        res.json()
+        res.json(),
       ),
-    { enabled: !!userId }
+    { refetchOnMount: true, refetchOnWindowFocus: true },
   );
 }
