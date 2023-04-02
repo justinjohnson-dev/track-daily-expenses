@@ -7,6 +7,8 @@ import useExpenseCategoryQuery from '../hooks/expense/use-expense-categories-que
 import useExpenseCategoryAmountQuery from '../hooks/expense/use-expense-category-amount';
 import { useRouter } from 'next/router';
 
+import PieChart from '../components/charts/pieChart';
+
 const ProfilePage = ({ user }: any) => {
   const { data: expenseCategories, isLoading: isLoadingExpenses } =
     useExpenseCategoryQuery(user.sub);
@@ -37,10 +39,16 @@ const ProfilePage = ({ user }: any) => {
         </p>
         <TotalUserReport />
 
-        <ExpenseCategories
+        {/* <ExpenseCategories
+          isLoadingExpenses={isLoadingExpenses}
+          expenseCategories={expenseCategories}
+        /> */}
+
+        <PieChart
           isLoadingExpenses={isLoadingExpenses}
           expenseCategories={expenseCategories}
         />
+
         <ExpenseCategories
           isLoadingExpenses={isLoadingExpenseAmounts}
           expenseCategories={expenseAmounts}
