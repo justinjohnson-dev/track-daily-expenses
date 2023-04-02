@@ -2,20 +2,48 @@ import React from 'react';
 import ReactEcharts from 'echarts-for-react';
 import CircularIndeterminate from '../circularLoadingBar';
 
+import useExpenseCategoryQuery from '../../hooks/expense/use-expense-categories-query';
+import useExpenseCategoryQueryByMonth from '../../hooks/expense/use-expense-categories-query-by-month';
+// import useExpenseCategoryAmountQuery from '../../hooks/expense/use-expense-category-amount';
+
 interface expenseCategoryProps {
   isLoadingExpenses: boolean;
   expenseCategories: [object];
 }
 
-export default function PieChart({
-  isLoadingExpenses,
-  expenseCategories,
-}: expenseCategoryProps) {
+export default function PieChart({ user }: any, dateRange: any) {
+  console.log(dateRange);
+  const { data: expenseCategories, isLoading: isLoadingExpenses } =
+    useExpenseCategoryQuery(user.sub);
+
+  const {
+    data: expenseCategoriesForGivenMonth,
+    isLoading: isLoadingExpensesByMonth,
+  } = useExpenseCategoryQueryByMonth(user.sub, 3);
+
+  // const { data: expenseAmounts, isLoading: isLoadingExpenseAmounts } =
+  //   useExpenseCategoryAmountQuery(user.sub);
+
   if (isLoadingExpenses) {
     return <CircularIndeterminate />;
-  } else if (!isLoadingExpenses && Object.keys(expenseCategories).length) {
-    console.log(expenseCategories);
+  }
 
+  if (expenseCategories.length === 0) {
+    return (
+      <div style={{ width: '100%' }}>
+        <h3
+          style={{
+            textAlign: 'center',
+          }}
+        >
+          No expense categories
+        </h3>
+      </div>
+    );
+  }
+
+  console.log(expenseCategories);
+  if (expenseCategories) {
     // testing this should be moved to backend and separate component
     const pieChartValues = [];
     expenseCategories.map((expense: object, index: number) => {
@@ -24,7 +52,6 @@ export default function PieChart({
         name: expense['expenseCategory'],
       });
     });
-    pieChartValues.pop();
 
     const option = {
       legend: {
@@ -55,20 +82,8 @@ export default function PieChart({
 
     return (
       <div style={{ textAlign: 'center' }}>
-        <h3>Top 4 Expense Categories</h3>
+        <h3>Top Four Category Transactions</h3>
         <ReactEcharts option={option} />
-      </div>
-    );
-  } else {
-    return (
-      <div style={{ width: '100%' }}>
-        <h3
-          style={{
-            textAlign: 'center',
-          }}
-        >
-          No expense categories
-        </h3>
       </div>
     );
   }
