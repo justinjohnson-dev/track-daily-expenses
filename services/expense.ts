@@ -22,7 +22,7 @@ export async function editUserExpense(expense: {
   });
 }
 
-export async function deleteUserExpense(expense: { id: string }) {
+export async function deleteUserExpense(expense: { id: any }) {
   return await prisma.expenses.delete({
     where: {
       id: expense.id,
@@ -31,8 +31,8 @@ export async function deleteUserExpense(expense: { id: string }) {
 }
 
 export async function getTopFiveExpenseCategoryAndSumSortDescByMonth(
-  userId: string,
-  month: number
+  userId: any,
+  month: any
 ) {
   return prisma.expenses.groupBy({
     by: ['expenseCategory'],
@@ -59,7 +59,7 @@ export async function getTopFiveExpenseCategoryAndSumSortDescByMonth(
   });
 }
 
-export async function getTopFiveExpenseCategoryAndSumSortDesc(userId: string) {
+export async function getTopFiveExpenseCategoryAndSumSortDesc(userId: any) {
   return prisma.expenses.groupBy({
     by: ['expenseCategory'],
     where: {
@@ -92,7 +92,7 @@ export async function getAllExpensesByUserByMonth(userId: any) {
   });
 }
 
-export async function getAllExpensesByUser(userId: string) {
+export async function getAllExpensesByUser(userId: any) {
   return prisma.expenses.findMany({
     where: {
       userId: userId,
@@ -101,8 +101,8 @@ export async function getAllExpensesByUser(userId: string) {
 }
 
 export async function getExpensesByDescAmountForUserByMonth(
-  userId: string,
-  month: number
+  userId: any,
+  month: any
 ) {
   return prisma.expenses.groupBy({
     by: ['expenseCategory'],
@@ -129,7 +129,7 @@ export async function getExpensesByDescAmountForUserByMonth(
   });
 }
 
-export async function getExpensesByDescAmountForUser(userId: string) {
+export async function getExpensesByDescAmountForUser(userId: any) {
   return prisma.expenses.groupBy({
     by: ['expenseCategory'],
     where: {
@@ -152,7 +152,7 @@ export async function getExpensesByDescAmountForUser(userId: string) {
   });
 }
 
-export async function getExpenseSummaryByUser(userId: string) {
+export async function getExpenseSummaryByUser(userId: any) {
   return prisma.expenses.groupBy({
     by: ['userId'],
     where: {

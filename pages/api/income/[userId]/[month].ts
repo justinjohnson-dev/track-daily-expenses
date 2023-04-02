@@ -26,7 +26,7 @@ export default async function handler(
 
     const incomeReports = await getAllIncomeReportsByUserByMonth(userId);
     const finalIncomeReports = incomeReports.filter(
-      (record: IncomeObject) => record.incomeMonth === Number(month)
+      (record) => record.incomeMonth === Number(month)
     );
 
     const sumOfIncome = finalIncomeReports.reduce(
