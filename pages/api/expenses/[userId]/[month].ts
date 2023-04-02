@@ -22,11 +22,11 @@ export default async function handler(
   const { method, query } = req;
   if (method === 'GET') {
     const userId = query.userId;
-    const month = query.month;
+    const month = Number(query.month);
 
     const expenses = await getAllExpensesByUserByMonth(userId);
     const finalExpenses = expenses.filter(
-      (record: expenseObject) => record.expenseMonth === Number(month)
+      (record) => record.expenseMonth === month
     );
     const sumOfExpense = finalExpenses.reduce(
       (runningSum: number, expenseEntry: any) =>

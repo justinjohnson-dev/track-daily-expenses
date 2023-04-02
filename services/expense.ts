@@ -32,7 +32,7 @@ export async function deleteUserExpense(expense: { id: string }) {
 
 export async function getTopFiveExpenseCategoryAndSumSortDescByMonth(
   userId: string,
-  month: number,
+  month: number
 ) {
   return prisma.expenses.groupBy({
     by: ['expenseCategory'],
@@ -82,7 +82,7 @@ export async function getTopFiveExpenseCategoryAndSumSortDesc(userId: string) {
   });
 }
 
-export async function getAllExpensesByUserByMonth(userId: string) {
+export async function getAllExpensesByUserByMonth(userId: any) {
   return prisma.expenses.findMany({
     where: {
       userId: {
@@ -102,7 +102,7 @@ export async function getAllExpensesByUser(userId: string) {
 
 export async function getExpensesByDescAmountForUserByMonth(
   userId: string,
-  month: number,
+  month: number
 ) {
   return prisma.expenses.groupBy({
     by: ['expenseCategory'],
