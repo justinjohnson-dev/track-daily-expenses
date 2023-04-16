@@ -58,12 +58,14 @@ interface FullScreenEditExpenseModalProps {
     expenseCategory: string;
     expenseDate: string;
   };
+  refetch: any;
 }
 
 export default function FullScreenEditExpenseModal({
   expense,
   updateModalStatus,
   isEditModalActive,
+  refetch,
 }: FullScreenEditExpenseModalProps) {
   const { user, error, isLoading } = useUser();
   const editExpenseMutation = useEditExpenseMutation();
@@ -83,6 +85,7 @@ export default function FullScreenEditExpenseModal({
 
     if (response) handleClose();
     updateModalStatus(false);
+    refetch();
   };
 
   const onSubmitDelete = async () => {
@@ -92,6 +95,7 @@ export default function FullScreenEditExpenseModal({
 
     if (response) handleClose();
     updateModalStatus(false);
+    refetch();
   };
 
   return (

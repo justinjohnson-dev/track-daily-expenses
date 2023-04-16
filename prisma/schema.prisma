@@ -8,13 +8,15 @@ datasource db {
 }
 
 model expenses {
-  id              String @id @default(auto()) @map("_id") @db.ObjectId
-  expense         String
-  expenseAmount   Float
-  expenseCategory String
-  expenseDate     String
-  expenseMonth    Int
-  userId          String
+  id                   String  @id @default(auto()) @map("_id") @db.ObjectId
+  expense              String
+  expenseAmount        Float
+  expenseCategory      String
+  expenseDate          String
+  /// Multiple data types found: Int: 85.5%, BigInt: 14.5% out of 339 sampled entries
+  expenseMonth         Json
+  isReoccurringExpense Boolean
+  userId               String
 }
 
 model income {
@@ -22,9 +24,21 @@ model income {
   incomeAmount   Float
   incomeCategory String
   incomeDate     String
-  incomeMonth    Int
+  /// Multiple data types found: Int: 27.7%, BigInt: 72.3% out of 47 sampled entries
+  incomeMonth    Json
   incomeName     String
   userId         String
+}
+
+model reoccurring_expenses {
+  id                   String  @id @default(auto()) @map("_id") @db.ObjectId
+  expense              String
+  expenseAmount        Float
+  expenseCategory      String
+  expenseDate          String
+  expenseMonth         Int
+  isReoccurringExpense Boolean
+  userId               String
 }
 
 model users {

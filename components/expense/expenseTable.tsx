@@ -21,10 +21,11 @@ export default function ExpenseTable({
   currentIncomeSum,
   filterValue,
 }: expenseTableProps) {
-  const { data: expenses, isLoading: isLoadingExpenses } = useExpenseQuery(
-    sub,
-    month,
-  );
+  const {
+    data: expenses,
+    isLoading: isLoadingExpenses,
+    refetch,
+  } = useExpenseQuery(sub, month);
   const [amountSortDirectionAscending, setAmountSortDirectionAscending] =
     useState<boolean>(false);
   let filteredData = [];
@@ -64,13 +65,17 @@ export default function ExpenseTable({
         filteredData.length === 0
       ) {
         return expenses.data.map((expense: any, index: number) => {
-          return <ExpenseTableItems key={index} data={expense} />;
+          return (
+            <ExpenseTableItems key={index} data={expense} refetch={refetch} />
+          );
         });
       }
 
       if (!isLoadingExpenses && filteredData.length > 0) {
         return filteredData.map((expense: any, index: number) => {
-          return <ExpenseTableItems key={index} data={expense} />;
+          return (
+            <ExpenseTableItems key={index} data={expense} refetch={refetch} />
+          );
         });
       }
     };

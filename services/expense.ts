@@ -92,6 +92,16 @@ export async function getAllExpensesByUserByMonth(userId: any) {
   });
 }
 
+export async function getAllReOccurringExpensesByUserByMonth(userId: any) {
+  return prisma.reoccurring_expenses.findMany({
+    where: {
+      userId: {
+        equals: userId,
+      },
+    },
+  });
+}
+
 export async function getAllExpensesByUser(userId: any) {
   return prisma.expenses.findMany({
     where: {
@@ -182,4 +192,19 @@ export async function createExpense(daily_expense: {
   };
 
   return prisma.expenses.create(expenseData);
+}
+
+export async function createReOccurringExpense(expense: {
+  expense: string;
+  expenseAmount: number;
+  expenseCategory: string;
+  expenseDate: string;
+  expenseMonth: number;
+  userId: string;
+}) {
+  const expenseData = {
+    data: expense,
+  };
+
+  return prisma.reoccurring_expenses.create(expenseData);
 }

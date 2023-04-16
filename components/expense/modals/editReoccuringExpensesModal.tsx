@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Dialog from '@mui/material/Dialog';
 import {
+  TextField,
+  Button,
   FormControl,
   InputLabel,
-  MenuItem,
-  TextField,
   Select,
-  Button,
+  MenuItem,
 } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -19,8 +18,28 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import useEditExpenseMutation from '../../../hooks/expense/use-expense-edit';
 import useDeleteExpenseMutation from '../../../hooks/expense/use-expense-delete';
+import useReOccurringExpenseMutation from '../../../hooks/reoccurring_expense/use-reoccurring-expense-mutation';
+import useReOccurringExpenseQuery from '../../../hooks/reoccurring_expense/use-reoccurring-expense-query';
 import { useUser } from '@auth0/nextjs-auth0/client';
-import DatePickerComponent from '../../mui/datePicker';
+import ExpenseTableItems from '../expenseTableItems';
+
+const LIST_OF_EXPENSE_CATEGORIES: string[] = [
+  'Utility',
+  'Rent',
+  'Groceries',
+  'Restaurant',
+  'Loan',
+  'Entertainment',
+  'Medical Bill',
+  'Gas',
+  'Wellness',
+  'Insurance',
+  'Shopping',
+  'Shopping Necessities',
+  'Phone',
+  'Vacation',
+  'Travel',
+];
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -41,29 +60,60 @@ export default function FullScreenReoccuringExpensesModal({
   isModalActive,
 }: FullScreenEditExpenseModalProps) {
   const { user, error, isLoading } = useUser();
-  const editExpenseMutation = useEditExpenseMutation();
-  const deleteExpenseMutation = useDeleteExpenseMutation(user.sub);
+  const {
+    data: reOccurringExpenses,
+    isLoading: isLoadingExpenses,
+    refetch,
+  } = useReOccurringExpenseQuery(user.sub, new Date().getMonth() + 1);
+  console.log(reOccurringExpenses);
+
+  const reOccurringExpenseMutation = useReOccurringExpenseMutation();
+
+  const [inEditProgressExpense, setInEditProgressExpense] = useState({
+    expense: '',
+    expenseAmount: 0,
+    expenseCategory: '',
+    expenseDate: 0,
+  });
+
+  //   const editExpenseMutation = useEditExpenseMutation();
+  //   const deleteExpenseMutation = useDeleteExpenseMutation(user.sub);
 
   const handleClose = () => {
     updateModalStatus(false);
   };
 
-  const [inEditProgressExpense, setInEditProgressExpense] = React.useState('');
-
-  const onSubmitUpdate = async () => {
-    // const response = await editExpenseMutation.mutateAsync(
-    //   inEditProgressExpense,
-    // );
-    // if (response) handleClose();
-    // updateModalStatus(false);
+  const clearExpenseForm = () => {
+    setInEditProgressExpense({
+      expense: '',
+      expenseAmount: 0,
+      expenseCategory: '',
+      expenseDate: 0,
+    });
   };
 
-  const onSubmitDelete = async () => {
-    // const response = await deleteExpenseMutation.mutateAsync(
-    //   inEditProgressExpense,
-    // );
-    // if (response) handleClose();
-    // updateModalStatus(false);
+  const onSubmitExpense = async () => {
+    const expenseData = {
+      expense: inEditProgressExpense.expense,
+      expenseAmount: inEditProgressExpense.expenseAmount,
+      expenseCategory: inEditProgressExpense.expenseCategory,
+      expenseDate: new Date(
+        `${new Date().getMonth() + 1}/${
+          inEditProgressExpense.expenseDate
+        }/${new Date().getFullYear()}`,
+      ).toLocaleString('en-US', {
+        timeZone: 'CST',
+        dateStyle: 'full',
+        timeStyle: 'full',
+      }),
+      expenseMonth: new Date().getMonth() + 1,
+      userId: user.sub,
+      isReoccurringExpense: true,
+    };
+
+    await reOccurringExpenseMutation.mutateAsync(expenseData);
+    clearExpenseForm();
+    refetch();
   };
 
   return (
@@ -116,47 +166,76 @@ export default function FullScreenReoccuringExpensesModal({
             style={{ width: '100%' }}
             id='outlined-textarea'
             label='Expense'
-            placeholder='Starbucks'
+            placeholder='Rent'
             multiline
-            // onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            //   setInEditProgressExpense({
-            //     ...inEditProgressExpense,
-            //     expense: event.target.value,
-            //   });
-            // }}
-            // value={inEditProgressExpense.expense}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setInEditProgressExpense({
+                ...inEditProgressExpense,
+                expense: event.target.value,
+              });
+            }}
+            value={inEditProgressExpense.expense}
           />
           <TextField
             style={{ marginTop: '5%', width: '100%' }}
             id='outlined-textarea'
             label='Expense Amount'
-            placeholder='10.34'
             multiline
-            // onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            //   setInEditProgressExpense({
-            //     ...inEditProgressExpense,
-            //     expenseAmount: Number(event.target.value),
-            //   });
-            // }}
-            // value={inEditProgressExpense.expenseAmount}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setInEditProgressExpense({
+                ...inEditProgressExpense,
+                expenseAmount: Number(event.target.value),
+              });
+            }}
+            value={inEditProgressExpense.expenseAmount}
           />
+          <FormControl fullWidth style={{ marginTop: '5%', width: '100%' }}>
+            <InputLabel id='demo-simple-select-label'>
+              Expense Category
+            </InputLabel>
+            <Select
+              labelId='demo-simple-select-label'
+              id='demo-simple-select'
+              value={inEditProgressExpense.expenseCategory}
+              label='ExpenseCategory'
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setInEditProgressExpense({
+                  ...inEditProgressExpense,
+                  expenseCategory: event.target.value,
+                });
+              }}
+            >
+              {LIST_OF_EXPENSE_CATEGORIES.map(
+                (expense: string, index: number) => {
+                  return (
+                    <MenuItem key={index} value={expense}>
+                      {expense}
+                    </MenuItem>
+                  );
+                },
+              )}
+            </Select>
+          </FormControl>
           <TextField
             style={{ marginTop: '5%', width: '100%' }}
             id='outlined-textarea'
-            label='Date Expense Comes Out'
-            placeholder='10.34'
-            multiline
-            // onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            //   setInEditProgressExpense({
-            //     ...inEditProgressExpense,
-            //     expenseAmount: Number(event.target.value),
-            //   });
-            // }}
-            // value={inEditProgressExpense.expenseAmount}
+            label='Day of the month expense is due'
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setInEditProgressExpense({
+                ...inEditProgressExpense,
+                expenseDate: Number(event.target.value),
+              });
+            }}
+            value={inEditProgressExpense.expenseDate}
           />
-          <br />
-          <br />
-          <br />
+          <Button
+            variant='outlined'
+            style={{ margin: '1rem 0', float: 'right' }}
+            onClick={onSubmitExpense}
+          >
+            Add Expense
+          </Button>
+
           <table
             style={{
               margin: '0 auto',
@@ -196,7 +275,19 @@ export default function FullScreenReoccuringExpensesModal({
                 ></th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+              {!isLoadingExpenses &&
+                reOccurringExpenses.data.map((expense: any, index: number) => {
+                  return (
+                    <ExpenseTableItems
+                      key={index}
+                      data={expense}
+                      refetch={refetch}
+                      // TODO add that it is coming from reoccurring rather then normal expense
+                    />
+                  );
+                })}
+            </tbody>
           </table>
         </div>
       </Dialog>
