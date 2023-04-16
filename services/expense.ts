@@ -22,8 +22,34 @@ export async function editUserExpense(expense: {
   });
 }
 
+export async function editReOccurringUserExpense(expense: {
+  id: string;
+  expense: string;
+  expenseAmount: number;
+  expenseCategory: string;
+}) {
+  return await prisma.reoccurring_expenses.update({
+    where: {
+      id: expense.id,
+    },
+    data: {
+      expense: expense.expense,
+      expenseAmount: Number(expense.expenseAmount),
+      expenseCategory: expense.expenseCategory,
+    },
+  });
+}
+
 export async function deleteUserExpense(expense: { id: any }) {
   return await prisma.expenses.delete({
+    where: {
+      id: expense.id,
+    },
+  });
+}
+
+export async function deleteReOccurringUserExpense(expense: { id: any }) {
+  return await prisma.reoccurring_expenses.delete({
     where: {
       id: expense.id,
     },

@@ -18,7 +18,9 @@ import Typography from '@mui/material/Typography';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import useEditExpenseMutation from '../../../hooks/expense/use-expense-edit';
+import useReOccurringEditExpenseMutation from '../../../hooks/reoccurring_expense/use-reoccurring-expense-edit';
 import useDeleteExpenseMutation from '../../../hooks/expense/use-expense-delete';
+import useReOccurringDeleteExpenseMutation from '../../../hooks/reoccurring_expense/use-reoccurring-expense-delete';
 import { useUser } from '@auth0/nextjs-auth0/client';
 
 const LIST_OF_EXPENSE_CATEGORIES: string[] = [
@@ -59,6 +61,7 @@ interface FullScreenEditExpenseModalProps {
     expenseDate: string;
   };
   refetch: any;
+  expense_api: string;
 }
 
 export default function FullScreenEditExpenseModal({
@@ -66,10 +69,15 @@ export default function FullScreenEditExpenseModal({
   updateModalStatus,
   isEditModalActive,
   refetch,
+  expense_api,
 }: FullScreenEditExpenseModalProps) {
   const { user, error, isLoading } = useUser();
   const editExpenseMutation = useEditExpenseMutation();
+  const editReOccurringExpenseMutation = useReOccurringEditExpenseMutation();
   const deleteExpenseMutation = useDeleteExpenseMutation(user.sub);
+  const deleteReOccurringExpenseMutation = useReOccurringDeleteExpenseMutation(
+    user.sub,
+  );
 
   const handleClose = () => {
     updateModalStatus(false);
@@ -88,8 +96,28 @@ export default function FullScreenEditExpenseModal({
     refetch();
   };
 
+  const onSubmitReOccurringUpdate = async () => {
+    const response = await editReOccurringExpenseMutation.mutateAsync(
+      inEditProgressExpense,
+    );
+
+    if (response) handleClose();
+    updateModalStatus(false);
+    refetch();
+  };
+
   const onSubmitDelete = async () => {
     const response = await deleteExpenseMutation.mutateAsync(
+      inEditProgressExpense,
+    );
+
+    if (response) handleClose();
+    updateModalStatus(false);
+    refetch();
+  };
+
+  const onSubmitReOccuringDelete = async () => {
+    const response = await deleteReOccurringExpenseMutation.mutateAsync(
       inEditProgressExpense,
     );
 
@@ -220,7 +248,10 @@ export default function FullScreenEditExpenseModal({
               marginTop: '2%',
               float: 'right',
             }}
-            onClick={onSubmitUpdate}
+            onClick={() => {
+              if (expense_api === 'expense') onSubmitUpdate();
+              else onSubmitReOccurringUpdate();
+            }}
           >
             Update
           </Button>
@@ -230,7 +261,10 @@ export default function FullScreenEditExpenseModal({
               marginTop: '2%',
               float: 'left',
             }}
-            onClick={onSubmitDelete}
+            onClick={() => {
+              if (expense_api === 'expense') onSubmitDelete();
+              else onSubmitReOccuringDelete();
+            }}
           >
             Delete
             <DeleteOutlineIcon />

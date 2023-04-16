@@ -66,7 +66,12 @@ export default function ExpenseTable({
       ) {
         return expenses.data.map((expense: any, index: number) => {
           return (
-            <ExpenseTableItems key={index} data={expense} refetch={refetch} />
+            <ExpenseTableItems
+              key={index}
+              data={expense}
+              refetch={refetch}
+              expense_api={'expense'}
+            />
           );
         });
       }
@@ -74,7 +79,12 @@ export default function ExpenseTable({
       if (!isLoadingExpenses && filteredData.length > 0) {
         return filteredData.map((expense: any, index: number) => {
           return (
-            <ExpenseTableItems key={index} data={expense} refetch={refetch} />
+            <ExpenseTableItems
+              key={index}
+              data={expense}
+              refetch={refetch}
+              expense_api={'expense'}
+            />
           );
         });
       }

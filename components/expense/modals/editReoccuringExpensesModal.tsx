@@ -16,8 +16,6 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import useEditExpenseMutation from '../../../hooks/expense/use-expense-edit';
-import useDeleteExpenseMutation from '../../../hooks/expense/use-expense-delete';
 import useReOccurringExpenseMutation from '../../../hooks/reoccurring_expense/use-reoccurring-expense-mutation';
 import useReOccurringExpenseQuery from '../../../hooks/reoccurring_expense/use-reoccurring-expense-query';
 import { useUser } from '@auth0/nextjs-auth0/client';
@@ -65,7 +63,6 @@ export default function FullScreenReoccuringExpensesModal({
     isLoading: isLoadingExpenses,
     refetch,
   } = useReOccurringExpenseQuery(user.sub, new Date().getMonth() + 1);
-  console.log(reOccurringExpenses);
 
   const reOccurringExpenseMutation = useReOccurringExpenseMutation();
 
@@ -75,9 +72,6 @@ export default function FullScreenReoccuringExpensesModal({
     expenseCategory: '',
     expenseDate: 0,
   });
-
-  //   const editExpenseMutation = useEditExpenseMutation();
-  //   const deleteExpenseMutation = useDeleteExpenseMutation(user.sub);
 
   const handleClose = () => {
     updateModalStatus(false);
@@ -283,7 +277,7 @@ export default function FullScreenReoccuringExpensesModal({
                       key={index}
                       data={expense}
                       refetch={refetch}
-                      // TODO add that it is coming from reoccurring rather then normal expense
+                      expense_api={'reoccurring'}
                     />
                   );
                 })}
