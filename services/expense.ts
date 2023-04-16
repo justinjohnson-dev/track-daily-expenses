@@ -212,6 +212,7 @@ export async function createExpense(daily_expense: {
   expenseDate: string;
   expenseMonth: number;
   userId: string;
+  isReoccurringExpense: boolean;
 }) {
   const expenseData = {
     data: daily_expense,
@@ -227,6 +228,7 @@ export async function createReOccurringExpense(expense: {
   expenseDate: string;
   expenseMonth: number;
   userId: string;
+  isReoccurringExpense: boolean;
 }) {
   const expenseData = {
     data: expense,
