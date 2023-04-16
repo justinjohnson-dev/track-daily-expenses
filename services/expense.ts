@@ -22,8 +22,34 @@ export async function editUserExpense(expense: {
   });
 }
 
+export async function editReOccurringUserExpense(expense: {
+  id: string;
+  expense: string;
+  expenseAmount: number;
+  expenseCategory: string;
+}) {
+  return await prisma.reoccurring_expenses.update({
+    where: {
+      id: expense.id,
+    },
+    data: {
+      expense: expense.expense,
+      expenseAmount: Number(expense.expenseAmount),
+      expenseCategory: expense.expenseCategory,
+    },
+  });
+}
+
 export async function deleteUserExpense(expense: { id: any }) {
   return await prisma.expenses.delete({
+    where: {
+      id: expense.id,
+    },
+  });
+}
+
+export async function deleteReOccurringUserExpense(expense: { id: any }) {
+  return await prisma.reoccurring_expenses.delete({
     where: {
       id: expense.id,
     },
@@ -84,6 +110,16 @@ export async function getTopFiveExpenseCategoryAndSumSortDesc(userId: any) {
 
 export async function getAllExpensesByUserByMonth(userId: any) {
   return prisma.expenses.findMany({
+    where: {
+      userId: {
+        equals: userId,
+      },
+    },
+  });
+}
+
+export async function getAllReOccurringExpensesByUserByMonth(userId: any) {
+  return prisma.reoccurring_expenses.findMany({
     where: {
       userId: {
         equals: userId,
@@ -176,10 +212,27 @@ export async function createExpense(daily_expense: {
   expenseDate: string;
   expenseMonth: number;
   userId: string;
+  isReoccurringExpense: boolean;
 }) {
   const expenseData = {
     data: daily_expense,
   };
 
   return prisma.expenses.create(expenseData);
+}
+
+export async function createReOccurringExpense(expense: {
+  expense: string;
+  expenseAmount: number;
+  expenseCategory: string;
+  expenseDate: string;
+  expenseMonth: number;
+  userId: string;
+  isReoccurringExpense: boolean;
+}) {
+  const expenseData = {
+    data: expense,
+  };
+
+  return prisma.reoccurring_expenses.create(expenseData);
 }

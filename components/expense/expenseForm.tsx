@@ -70,6 +70,7 @@ export default function expenseForm() {
           timeStyle: 'full',
         }),
         userId: user.sub,
+        isReoccurringExpense: false,
       };
 
       await expenseMutation.mutateAsync(expense);

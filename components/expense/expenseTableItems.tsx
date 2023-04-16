@@ -10,10 +10,14 @@ interface ExpenseProps {
     expenseCategory: string;
     expenseDate: string;
   };
+  refetch: any;
+  expense_api: string;
 }
 
 export default function ExpenseTableItems({
   data: { id, expense, expenseAmount, expenseCategory, expenseDate },
+  refetch,
+  expense_api,
 }: ExpenseProps) {
   const expenseRow = {
     id,
@@ -61,6 +65,8 @@ export default function ExpenseTableItems({
               expense={expenseRow}
               isEditModalActive={isModalActive}
               updateModalStatus={updateModalStatus}
+              refetch={refetch}
+              expense_api={expense_api}
             />
           )}
         </span>

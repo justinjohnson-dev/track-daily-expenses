@@ -1,14 +1,13 @@
-import * as React from 'react';
-
+import React, { useState } from 'react';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Dialog from '@mui/material/Dialog';
 import {
+  TextField,
+  Button,
   FormControl,
   InputLabel,
-  MenuItem,
-  TextField,
   Select,
-  Button,
+  MenuItem,
 } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,11 +16,10 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import useEditExpenseMutation from '../../../hooks/expense/use-expense-edit';
-import useReOccurringEditExpenseMutation from '../../../hooks/reoccurring_expense/use-reoccurring-expense-edit';
-import useDeleteExpenseMutation from '../../../hooks/expense/use-expense-delete';
-import useReOccurringDeleteExpenseMutation from '../../../hooks/reoccurring_expense/use-reoccurring-expense-delete';
+import useReOccurringExpenseMutation from '../../../hooks/reoccurring_expense/use-reoccurring-expense-mutation';
+import useReOccurringExpenseQuery from '../../../hooks/reoccurring_expense/use-reoccurring-expense-query';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import ExpenseTableItems from '../expenseTableItems';
 
 const LIST_OF_EXPENSE_CATEGORIES: string[] = [
   'Utility',
@@ -51,78 +49,64 @@ const Transition = React.forwardRef(function Transition(
 });
 
 interface FullScreenEditExpenseModalProps {
-  isEditModalActive: boolean;
+  isModalActive: boolean;
   updateModalStatus: any;
-  expense: {
-    id: string;
-    expense: string;
-    expenseAmount: number;
-    expenseCategory: string;
-    expenseDate: string;
-  };
-  refetch: any;
-  expense_api: string;
 }
 
-export default function FullScreenEditExpenseModal({
-  expense,
+export default function FullScreenReoccuringExpensesModal({
   updateModalStatus,
-  isEditModalActive,
-  refetch,
-  expense_api,
+  isModalActive,
 }: FullScreenEditExpenseModalProps) {
   const { user, error, isLoading } = useUser();
-  const editExpenseMutation = useEditExpenseMutation();
-  const editReOccurringExpenseMutation = useReOccurringEditExpenseMutation();
-  const deleteExpenseMutation = useDeleteExpenseMutation(user.sub);
-  const deleteReOccurringExpenseMutation = useReOccurringDeleteExpenseMutation(
-    user.sub,
-  );
+  const {
+    data: reOccurringExpenses,
+    isLoading: isLoadingExpenses,
+    refetch,
+  } = useReOccurringExpenseQuery(user.sub, new Date().getMonth() + 1);
+
+  const reOccurringExpenseMutation = useReOccurringExpenseMutation();
+
+  const [inEditProgressExpense, setInEditProgressExpense] = useState({
+    expense: '',
+    expenseAmount: 0,
+    expenseCategory: '',
+    expenseDate: 0,
+  });
 
   const handleClose = () => {
     updateModalStatus(false);
   };
 
-  const [inEditProgressExpense, setInEditProgressExpense] =
-    React.useState(expense);
-
-  const onSubmitUpdate = async () => {
-    const response = await editExpenseMutation.mutateAsync(
-      inEditProgressExpense,
-    );
-
-    if (response) handleClose();
-    updateModalStatus(false);
-    refetch();
+  const clearExpenseForm = () => {
+    setInEditProgressExpense({
+      expense: '',
+      expenseAmount: 0,
+      expenseCategory: '',
+      expenseDate: 0,
+    });
   };
 
-  const onSubmitReOccurringUpdate = async () => {
-    const response = await editReOccurringExpenseMutation.mutateAsync(
-      inEditProgressExpense,
-    );
+  const onSubmitExpense = async () => {
+    const expenseData = {
+      expense: inEditProgressExpense.expense,
+      expenseAmount: inEditProgressExpense.expenseAmount,
+      expenseCategory: inEditProgressExpense.expenseCategory,
+      expenseDate: new Date(
+        `${new Date().getMonth() + 1}/${
+          inEditProgressExpense.expenseDate
+        }/${new Date().getFullYear()}`,
+      ).toLocaleString('en-US', {
+        timeZone: 'CST',
+        dateStyle: 'full',
+        timeStyle: 'full',
+      }),
+      expenseMonth: new Date().getMonth() + 1,
+      userId: user.sub,
+      isReoccurringExpense: true,
+    };
 
-    if (response) handleClose();
-    updateModalStatus(false);
-    refetch();
-  };
-
-  const onSubmitDelete = async () => {
-    const response = await deleteExpenseMutation.mutateAsync(
-      inEditProgressExpense,
-    );
-
-    if (response) handleClose();
-    updateModalStatus(false);
-    refetch();
-  };
-
-  const onSubmitReOccuringDelete = async () => {
-    const response = await deleteReOccurringExpenseMutation.mutateAsync(
-      inEditProgressExpense,
-    );
-
-    if (response) handleClose();
-    updateModalStatus(false);
+    await reOccurringExpenseMutation.mutateAsync(expenseData);
+    clearExpenseForm();
     refetch();
   };
 
@@ -130,7 +114,7 @@ export default function FullScreenEditExpenseModal({
     <div>
       <Dialog
         fullScreen
-        open={isEditModalActive}
+        open={isModalActive}
         onClose={handleClose}
         TransitionComponent={Transition}
       >
@@ -151,37 +135,32 @@ export default function FullScreenEditExpenseModal({
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant='h6' component='div'>
-              Edit Expense {}
+              Reoccurring Expenses
             </Typography>
           </Toolbar>
         </AppBar>
         <div
           style={{
             width: '85%',
-            margin: '10% auto',
-            marginRight: '10%',
+            margin: '1rem auto',
             justifyContent: 'space-evenly',
           }}
         >
           <p
             style={{
-              padding: '5px',
+              fontSize: '1.25rem',
+              fontWeight: 'bold',
+              color: '#009879',
+              marginBottom: '1rem',
             }}
           >
-            <code
-              style={{
-                fontWeight: '700',
-                fontFamily: 'var(--font-mono)',
-              }}
-            >
-              Expense ID: {inEditProgressExpense.id}
-            </code>
+            Add New Reoccuring Expenses
           </p>
           <TextField
             style={{ width: '100%' }}
             id='outlined-textarea'
             label='Expense'
-            placeholder='Starbucks'
+            placeholder='Rent'
             multiline
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               setInEditProgressExpense({
@@ -195,7 +174,6 @@ export default function FullScreenEditExpenseModal({
             style={{ marginTop: '5%', width: '100%' }}
             id='outlined-textarea'
             label='Expense Amount'
-            placeholder='10.34'
             multiline
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               setInEditProgressExpense({
@@ -235,40 +213,76 @@ export default function FullScreenEditExpenseModal({
           <TextField
             style={{ marginTop: '5%', width: '100%' }}
             id='outlined-textarea'
-            label='Created Timestamp'
-            placeholder='10.34'
-            multiline
-            disabled={true}
+            label='Day of the month expense is due'
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setInEditProgressExpense({
+                ...inEditProgressExpense,
+                expenseDate: Number(event.target.value),
+              });
+            }}
             value={inEditProgressExpense.expenseDate}
           />
+          <Button
+            variant='outlined'
+            style={{ margin: '1rem 0', float: 'right' }}
+            onClick={onSubmitExpense}
+          >
+            Add Expense
+          </Button>
 
-          <Button
-            variant='outlined'
+          <table
             style={{
-              marginTop: '2%',
-              float: 'right',
-            }}
-            onClick={() => {
-              if (expense_api === 'expense') onSubmitUpdate();
-              else onSubmitReOccurringUpdate();
+              margin: '0 auto',
+              width: '100%',
+              borderCollapse: 'collapse',
+              fontSize: '0.9em',
+              fontFamily: 'sans-serif',
+              boxShadow: '0 0 20px rgba(0, 0, 0, 0.15)',
             }}
           >
-            Update
-          </Button>
-          <Button
-            variant='outlined'
-            style={{
-              marginTop: '2%',
-              float: 'left',
-            }}
-            onClick={() => {
-              if (expense_api === 'expense') onSubmitDelete();
-              else onSubmitReOccuringDelete();
-            }}
-          >
-            Delete
-            <DeleteOutlineIcon />
-          </Button>
+            <thead>
+              <tr
+                style={{
+                  backgroundColor: '#009879',
+                  color: '#ffffff',
+                  textAlign: 'left',
+                }}
+              >
+                <th
+                  style={{
+                    padding: '12px 15px',
+                  }}
+                >
+                  Expense
+                </th>
+                <th
+                  style={{
+                    padding: '12px 15px',
+                  }}
+                >
+                  <span>Amount </span>
+                </th>
+                <th
+                  style={{
+                    padding: '12px 15px',
+                  }}
+                ></th>
+              </tr>
+            </thead>
+            <tbody>
+              {!isLoadingExpenses &&
+                reOccurringExpenses.data.map((expense: any, index: number) => {
+                  return (
+                    <ExpenseTableItems
+                      key={index}
+                      data={expense}
+                      refetch={refetch}
+                      expense_api={'reoccurring'}
+                    />
+                  );
+                })}
+            </tbody>
+          </table>
         </div>
       </Dialog>
     </div>
