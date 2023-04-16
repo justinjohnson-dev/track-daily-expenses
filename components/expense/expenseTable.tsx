@@ -6,8 +6,7 @@ import CircularIndeterminate from '../circularLoadingBar';
 import ExpenseTableItems from './expenseTableItems';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
-import { User } from '../../interfaces';
+import ReOccurringExpenses from './reoccurringExpenses';
 
 type expenseTableProps = {
   sub: string;
@@ -109,6 +108,9 @@ export default function ExpenseTable({
                 Math.round(expenses.runningSum * 100) / 100,
             )}
           </code>
+        </div>
+        <div style={{ margin: '1rem 1rem 0 1rem' }}>
+          <ReOccurringExpenses />
         </div>
         <div style={{ margin: '25px 0' }}>
           <table
