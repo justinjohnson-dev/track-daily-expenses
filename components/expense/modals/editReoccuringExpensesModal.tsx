@@ -43,7 +43,7 @@ const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement;
   },
-  ref: React.Ref<unknown>,
+  ref: React.Ref<unknown>
 ) {
   return <Slide direction='down' ref={ref} {...props} />;
 });
@@ -63,7 +63,6 @@ export default function FullScreenReoccuringExpensesModal({
     isLoading: isLoadingExpenses,
     refetch,
   } = useReOccurringExpenseQuery(user.sub, new Date().getMonth() + 1);
-
   const reOccurringExpenseMutation = useReOccurringExpenseMutation();
 
   const [inEditProgressExpense, setInEditProgressExpense] = useState({
@@ -94,7 +93,7 @@ export default function FullScreenReoccuringExpensesModal({
       expenseDate: new Date(
         `${new Date().getMonth() + 1}/${
           inEditProgressExpense.expenseDate
-        }/${new Date().getFullYear()}`,
+        }/${new Date().getFullYear()}`
       ).toLocaleString('en-US', {
         timeZone: 'CST',
         dateStyle: 'full',
@@ -206,7 +205,7 @@ export default function FullScreenReoccuringExpensesModal({
                       {expense}
                     </MenuItem>
                   );
-                },
+                }
               )}
             </Select>
           </FormControl>
@@ -229,7 +228,20 @@ export default function FullScreenReoccuringExpensesModal({
           >
             Add Expense
           </Button>
-
+          <code>
+            <p
+              style={{
+                fontWeight: 'bold',
+                fontSize: '15px',
+                marginTop: '3rem',
+              }}
+            >
+              Total: $
+              {!isLoadingExpenses &&
+                reOccurringExpenses !== null &&
+                Math.round(reOccurringExpenses.runningSum * 100) / 100}
+            </p>
+          </code>
           <table
             style={{
               margin: '0 auto',

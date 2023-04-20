@@ -7,7 +7,7 @@ import { getAllReOccurringExpensesByUserByMonth } from '../../../../services/exp
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const { method, query } = req;
   if (method === 'GET') {
@@ -15,12 +15,20 @@ export default async function handler(
     const month = Number(query.month);
 
     const reoccurringExpenses = await getAllReOccurringExpensesByUserByMonth(
-      userId,
+      userId
     );
     const finalExpenses = reoccurringExpenses.filter(
-      (record) => record.expenseMonth === month,
+      (record) => record.expenseMonth === month
     );
 
-    return res.status(StatusCodes.OK).send({ data: finalExpenses });
+    const sumOfExpense = finalExpenses.reduce(
+      (runningSum: number, expenseEntry: any) =>
+        runningSum + expenseEntry.expenseAmount,
+      0
+    );
+
+    return res
+      .status(StatusCodes.OK)
+      .send({ data: finalExpenses, runningSum: sumOfExpense });
   }
 }

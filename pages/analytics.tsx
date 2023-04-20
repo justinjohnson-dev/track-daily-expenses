@@ -16,7 +16,6 @@ import Layout from '../components/layout';
 import React from 'react';
 
 import { useUser } from '@auth0/nextjs-auth0/client';
-
 import { TextField } from '@mui/material';
 
 const AnalyticsComponent = ({ user }: any) => {

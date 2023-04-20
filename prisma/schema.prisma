@@ -13,7 +13,7 @@ model expenses {
   expenseAmount        Float
   expenseCategory      String
   expenseDate          String
-  /// Multiple data types found: Int: 85.5%, BigInt: 14.5% out of 339 sampled entries
+  /// Multiple data types found: Int: 85.8%, BigInt: 14.2% out of 346 sampled entries
   expenseMonth         Json
   isReoccurringExpense Boolean
   userId               String
@@ -24,7 +24,7 @@ model income {
   incomeAmount   Float
   incomeCategory String
   incomeDate     String
-  /// Multiple data types found: Int: 27.7%, BigInt: 72.3% out of 47 sampled entries
+  /// Multiple data types found: Int: 30.6%, BigInt: 69.4% out of 49 sampled entries
   incomeMonth    Json
   incomeName     String
   userId         String
