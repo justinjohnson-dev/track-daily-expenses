@@ -12,7 +12,6 @@ export default async function handler(
   const { method, query } = req;
   if (method === 'GET') {
     const userId = query.userId;
-
     const reoccurringExpenses = await getAllReOccurringExpensesByUserByMonth(
       userId,
     );
