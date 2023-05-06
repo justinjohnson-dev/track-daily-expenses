@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import Dialog from '@mui/material/Dialog';
 import {
   TextField,
@@ -37,6 +36,7 @@ const LIST_OF_EXPENSE_CATEGORIES: string[] = [
   'Phone',
   'Vacation',
   'Travel',
+  'Subscription',
 ];
 
 const Transition = React.forwardRef(function Transition(
@@ -68,9 +68,9 @@ export default function FullScreenReoccuringExpensesModal({
 
   const [inEditProgressExpense, setInEditProgressExpense] = useState({
     expense: '',
-    expenseAmount: 0,
+    expenseAmount: '',
     expenseCategory: '',
-    expenseDate: 0,
+    expenseDate: '',
   });
 
   const handleClose = () => {
@@ -80,16 +80,16 @@ export default function FullScreenReoccuringExpensesModal({
   const clearExpenseForm = () => {
     setInEditProgressExpense({
       expense: '',
-      expenseAmount: 0,
+      expenseAmount: '',
       expenseCategory: '',
-      expenseDate: 0,
+      expenseDate: '',
     });
   };
 
   const onSubmitExpense = async () => {
     const expenseData = {
       expense: inEditProgressExpense.expense,
-      expenseAmount: inEditProgressExpense.expenseAmount,
+      expenseAmount: Number(inEditProgressExpense.expenseAmount),
       expenseCategory: inEditProgressExpense.expenseCategory,
       expenseDate: new Date(
         `${new Date().getMonth() + 1}/${
@@ -104,6 +104,8 @@ export default function FullScreenReoccuringExpensesModal({
       userId: user.sub,
       isReoccurringExpense: true,
     };
+
+    console.log(expenseData);
 
     await reOccurringExpenseMutation.mutateAsync(expenseData);
     clearExpenseForm();
@@ -178,7 +180,7 @@ export default function FullScreenReoccuringExpensesModal({
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               setInEditProgressExpense({
                 ...inEditProgressExpense,
-                expenseAmount: Number(event.target.value),
+                expenseAmount: event.target.value,
               });
             }}
             value={inEditProgressExpense.expenseAmount}
@@ -217,7 +219,7 @@ export default function FullScreenReoccuringExpensesModal({
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               setInEditProgressExpense({
                 ...inEditProgressExpense,
-                expenseDate: Number(event.target.value),
+                expenseDate: event.target.value,
               });
             }}
             value={inEditProgressExpense.expenseDate}
