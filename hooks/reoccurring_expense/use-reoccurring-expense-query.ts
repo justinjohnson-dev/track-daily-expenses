@@ -7,9 +7,7 @@ export default function useReOccurringExpenseQuery(
   return useQuery(
     ['reOccurringExpensesByMonth', month],
     () =>
-      fetch(`/api/reoccurring_expenses/${userId}/${month}`).then((res) =>
-        res.json(),
-      ),
+      fetch(`/api/reoccurring_expenses/${userId}`).then((res) => res.json()),
     { enabled: !!month },
   );
 }
