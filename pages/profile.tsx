@@ -128,8 +128,6 @@ const Profile = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
-
-  // Assuming a type guard `isUser` has been created
   if (isUser(user)) {
     return <ProfilePage user={user} />;
   }
