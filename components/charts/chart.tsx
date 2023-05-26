@@ -11,8 +11,8 @@ interface User {
 
 interface ChartProps {
   user: User;
-  dateRange: 'Month' | 'All Time';
-  month: string;
+  dateRange: string;
+  month: number;
 }
 
 export default function Chart({ user, dateRange, month }: ChartProps) {

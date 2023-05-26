@@ -101,7 +101,6 @@ const ProfilePage = ({ user }: any) => {
             </Box>
           )}
           <Chart user={user} dateRange={dateRangeSelector} month={month} />
-          {/* <ExpenseCategories dateRangeSelector={dateRangeSelect or} />{' '} */}
         </div>
       </div>
     </Layout>

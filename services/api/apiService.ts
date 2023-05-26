@@ -1,6 +1,5 @@
 interface User {
   sub: string;
-  // Add other fields for User as necessary
 }
 
 export default class ApiService {
@@ -9,7 +8,7 @@ export default class ApiService {
 
   static async fetchExpensesByMonth(
     userSub: User['sub'],
-    month: string,
+    month: number,
   ): Promise<any> {
     const url = `${this.baseUrl}/expenses/${userSub}/${month}/labels`;
     return await this.fetchData(url);
