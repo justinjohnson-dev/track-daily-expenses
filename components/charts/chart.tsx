@@ -1,21 +1,27 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import CircularIndeterminate from '../circularLoadingBar';
 import { useQuery } from 'react-query';
-
+import ApiService from '../../services/api/apiService';
 import useExpenseCategoryQuery from '../../hooks/expense/use-expense-categories-query';
 import PieChart from './pieChart';
 
-export default function Chart({ user, dateRange, month }) {
-  // putting query in component so it updates on window focus and remount properly
+interface User {
+  sub: string;
+}
+
+interface ChartProps {
+  user: User;
+  dateRange: 'Month' | 'All Time';
+  month: string;
+}
+
+export default function Chart({ user, dateRange, month }: ChartProps) {
   const {
     data: expenseCategoriesForGivenMonth,
     isLoading: isLoadingExpensesByMonth,
   } = useQuery(
     ['expenseAmountsByMonth', month],
-    () =>
-      fetch(`/api/expenses/${user.sub}/${month}/labels`).then((res) =>
-        res.json(),
-      ),
+    () => ApiService.fetchExpensesByMonth(user.sub, month),
     { refetchOnMount: true, refetchOnWindowFocus: true },
   );
 
@@ -28,17 +34,7 @@ export default function Chart({ user, dateRange, month }) {
     }
 
     if (expenseCategoriesForGivenMonth.length === 0) {
-      return (
-        <div style={{ width: '100%' }}>
-          <h3
-            style={{
-              textAlign: 'center',
-            }}
-          >
-            No expense categories
-          </h3>
-        </div>
-      );
+      return <NoCategories />;
     }
 
     return (
@@ -56,17 +52,7 @@ export default function Chart({ user, dateRange, month }) {
     }
 
     if (expenseCategories.length === 0) {
-      return (
-        <div style={{ width: '100%' }}>
-          <h3
-            style={{
-              textAlign: 'center',
-            }}
-          >
-            No expense categories
-          </h3>
-        </div>
-      );
+      return <NoCategories />;
     }
 
     return (
@@ -75,6 +61,14 @@ export default function Chart({ user, dateRange, month }) {
         dateRange={dateRange}
         month={month}
       />
+    );
+  }
+
+  function NoCategories() {
+    return (
+      <div style={{ width: '100%' }}>
+        <h3 style={{ textAlign: 'center' }}>No expense categories</h3>
+      </div>
     );
   }
 }
