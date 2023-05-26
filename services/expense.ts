@@ -190,17 +190,20 @@ export async function getTopFiveExpenseCategoryAndSumSortDesc(userId: any) {
   }
 }
 
-export async function getAllExpensesByUserByMonth(userId: any) {
+export async function getAllExpensesByUserByMonth(
+  userId: string,
+  month: number,
+) {
   try {
-    return await prisma.expenses.findMany({
+    const expenses = await prisma.expenses.findMany({
       where: {
-        userId: {
-          equals: userId,
-        },
+        userId: userId,
+        expenseMonth: month,
       },
     });
+    return expenses;
   } catch (error) {
-    console.error(`Error fetching all expenses by user by month: `, error);
+    console.error('Failed to get expenses for user by month:', error);
     throw error;
   }
 }
