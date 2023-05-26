@@ -1,5 +1,4 @@
 import { useMutation } from 'react-query';
-
 import queryClient from '../../lib/query-client';
 
 interface expenseEntry {
@@ -23,6 +22,9 @@ export default function useExpenseMutation() {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('expenses');
+      },
+      onError: (error: any) => {
+        console.error('An error occurred when posting the expense:', error);
       },
     },
   );
