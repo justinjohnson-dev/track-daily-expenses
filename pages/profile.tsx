@@ -1,21 +1,51 @@
-import Layout from '../components/layout';
 import React, { useEffect, useState } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
-import TotalUserReport from '../components/totalUserReport';
 import { useRouter } from 'next/router';
-
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { SelectChangeEvent } from '@mui/material';
 import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+
+import Layout from '../components/layout';
+import TotalUserReport from '../components/totalUserReport';
 import Chart from '../components/charts/chart';
 
-const ProfilePage = ({ user }: any) => {
-  // month selector could be put into custom component as it is used more than once
+interface User {
+  sub: string;
+  name: string;
+  nickname: string;
+}
+
+type ProfilePageProps = {
+  user: User;
+};
+
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+const ALL_TIME = 'All Time';
+
+const ProfilePage = ({ user }: ProfilePageProps) => {
   const currentMonth = new Date().getMonth() + 1;
   const [month, setMonth] = useState<number>(currentMonth);
-  const [dateRangeSelector, setDateRangeSelector] =
-    useState<string>('All Time');
+  const [dateRangeSelector, setDateRangeSelector] = useState<string>(ALL_TIME);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMonth(parseInt(event.target.value, 10));
+  const handleMonthChange = (event: SelectChangeEvent<string>) => {
+    setMonth(Number(event.target.value));
+  };
+
+  const handleDateRangeChange = (event: SelectChangeEvent<string>) => {
+    setDateRangeSelector(event.target.value);
   };
 
   return (
@@ -59,43 +89,22 @@ const ProfilePage = ({ user }: any) => {
         >
           <h2>Categories</h2>
           <FormControl fullWidth style={{ width: '100%' }}>
-            <InputLabel id='demo-simple-select-label'>Date Range</InputLabel>
-            <Select
-              labelId='demo-simple-select-label'
-              id='demo-simple-select'
-              value={dateRangeSelector}
-              label='dateRange'
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setDateRangeSelector(event.target.value);
-              }}
-            >
-              <MenuItem value={'All Time'}>All Time</MenuItem>
+            <InputLabel>Date Range</InputLabel>
+            <Select value={dateRangeSelector} onChange={handleDateRangeChange}>
+              <MenuItem value={ALL_TIME}>{ALL_TIME}</MenuItem>
               <MenuItem value={'Month'}>Month</MenuItem>
             </Select>
           </FormControl>
           {dateRangeSelector === 'Month' && (
             <Box sx={{ width: '100%', margin: '5% 0' }}>
               <FormControl fullWidth>
-                <InputLabel id='demo-simple-select-label'>Month</InputLabel>
-                <Select
-                  labelId='demo-simple-select-label'
-                  id='demo-simple-select'
-                  value={month.toString()}
-                  label='Month'
-                  onChange={handleChange}
-                >
-                  <MenuItem value={1}>January</MenuItem>
-                  <MenuItem value={2}>February</MenuItem>
-                  <MenuItem value={3}>March</MenuItem>
-                  <MenuItem value={4}>April</MenuItem>
-                  <MenuItem value={5}>May</MenuItem>
-                  <MenuItem value={6}>June</MenuItem>
-                  <MenuItem value={7}>July</MenuItem>
-                  <MenuItem value={8}>August</MenuItem>
-                  <MenuItem value={9}>September</MenuItem>
-                  <MenuItem value={10}>October</MenuItem>
-                  <MenuItem value={11}>November</MenuItem>
-                  <MenuItem value={12}>December</MenuItem>
+                <InputLabel>Month</InputLabel>
+                <Select value={month.toString()} onChange={handleMonthChange}>
+                  {MONTHS.map((month, index) => (
+                    <MenuItem key={index} value={index + 1}>
+                      {month}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Box>
@@ -117,14 +126,26 @@ const Profile = () => {
     }
   }, [user, router]);
 
-  // will make this better later
-  // if (isLoading) return <div>Loading...</div>;
-
+  if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
 
-  if (user) {
+  // Assuming a type guard `isUser` has been created
+  if (isUser(user)) {
     return <ProfilePage user={user} />;
   }
+
+  // Default return, should probably be a redirect or a 404 page
+  return <div>No user found</div>;
 };
+
+// Type guard to check if user is of type `User`
+function isUser(user: any): user is User {
+  return (
+    user &&
+    typeof user.sub === 'string' &&
+    typeof user.name === 'string' &&
+    typeof user.nickname === 'string'
+  );
+}
 
 export default Profile;
