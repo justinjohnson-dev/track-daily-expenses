@@ -18,6 +18,14 @@ export default function IncomeTable({
   if (isLoadingIncome) {
     return <CircularIndeterminate />;
   } else if (!isLoadingIncome && income.data.length > 0) {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    // filter out any income from previous years
+    // todo: move this to API call
+    income.data = income.data.filter(
+      (income: { incomeDate: string }) =>
+        new Date(income.incomeDate).getFullYear() === currentYear,
+    );
     return (
       <>
         <div>

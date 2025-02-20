@@ -34,7 +34,16 @@ export default function ExpenseTable({
     return <CircularIndeterminate />;
   } else if (!isLoadingExpenses && expenses.data.length > 0) {
     console.log(amountSortDirectionAscending);
+
     // THIS COULD BE SEPARATED TO MAKE THIS LESS COMPLICATED: TODO FOR LATER ;)
+    // hack to only keep expenses from current year, this is a TODO for later
+    // should be in API call
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    expenses.data = expenses.data.filter(
+      (expense: { expenseDate: string }) =>
+        new Date(expense.expenseDate).getFullYear() === currentYear,
+    );
     if (amountSortDirectionAscending === true) {
       expenses.data.sort(
         (a: { expenseAmount: number }, b: { expenseAmount: number }) =>
